@@ -36,8 +36,11 @@ public class GitHubRepositoryFetcher implements RepositoryFetcher {
                 .toList();
         limits.validateFetchedTree(candidates.stream().map(entry -> entry.size() == null ? 0L : entry.size()).toList());
         List<SourceFile> files = new ArrayList<>(candidates.size());
+        long downloadedBytes = 0;
         for (GitHubClient.TreeEntry entry : candidates) {
-            files.add(new SourceFile(entry.path(), client.content(ref, entry.path(), sha, null).body().decoded(), language(entry.path())));
+            byte[] contentBytes = client.content(ref, entry.path(), sha, null).body().decodedBytes();
+            downloadedBytes = limits.validateFetchedContent(contentBytes.length, downloadedBytes);
+            files.add(new SourceFile(entry.path(), new String(contentBytes, java.nio.charset.StandardCharsets.UTF_8), language(entry.path())));
         }
         return new RepositorySnapshot(ref.coordinate(), sha, files);
     }

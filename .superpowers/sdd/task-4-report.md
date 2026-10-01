@@ -14,6 +14,8 @@ export PATH="$JAVA_HOME/bin:$PATH"
 mvn -Dtest='com.tracemap.ingestion.github.*Test' test
 ```
 
-Result: 5 tests passed.
+Result: 9 tests passed.
+
+Review follow-up: decoded content is now strictly validated as UTF-8 and checked against per-file and cumulative byte limits immediately after every content response, before a file enters the snapshot. HTTP 403 is classified as forbidden unless explicit rate-limit headers are present; 429 remains rate-limited. Tests cover both classifications, malformed UTF-8, actual content-size enforcement, requested ref/tree recursion/content ref request paths, and low-level content ETag/If-None-Match behavior. Cache orchestration remains deferred; the client preserves ETag support without adding cache policy.
 
 Concern: Spring configuration registration/wiring of `GitHubProperties`, `GitHubClient`, and the fetcher is intentionally left for orchestration/configuration work; this task only provides the adapter types and constructors.

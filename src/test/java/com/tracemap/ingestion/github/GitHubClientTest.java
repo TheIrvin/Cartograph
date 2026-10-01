@@ -20,22 +20,31 @@ class GitHubClientTest {
     private HttpServer server;
     private AtomicReference<String> authorization;
     private AtomicReference<String> ifNoneMatch;
+    private AtomicReference<URI> requestUri;
     private GitHubClient client;
 
     @BeforeEach
     void setUp() throws Exception {
         authorization = new AtomicReference<>();
         ifNoneMatch = new AtomicReference<>();
+        requestUri = new AtomicReference<>();
         server = HttpServer.create(new InetSocketAddress(0), 0);
         server.createContext("/", exchange -> {
             authorization.set(exchange.getRequestHeaders().getFirst("Authorization"));
             ifNoneMatch.set(exchange.getRequestHeaders().getFirst("If-None-Match"));
+            requestUri.set(exchange.getRequestURI());
             String path = exchange.getRequestURI().getPath();
             if ("/repos/acme/demo".equals(path)) respond(exchange, 200, "{\"default_branch\":\"main\"}", "\"repo-v1\"");
             else if (path.endsWith("/commits/main")) respond(exchange, 200, "{\"sha\":\"abc123\"}", null);
             else if (path.endsWith("/git/trees/abc123")) respond(exchange, 200, "{\"truncated\":false,\"tree\":[]}", null);
             else if (path.endsWith("/contents/src/app.ts")) respond(exchange, 304, "", null);
+            else if (path.endsWith("/contents/src/etag.ts")) respond(exchange, 200, "{\"encoding\":\"base64\",\"content\":\"YQ==\"}", "\"content-v1\"");
             else if (path.endsWith("/missing")) respond(exchange, 404, "{}", null);
+            else if (path.endsWith("/forbidden")) respond(exchange, 403, "{}", null);
+            else if (path.endsWith("/rate-403")) {
+                exchange.getResponseHeaders().set("X-RateLimit-Remaining", "0");
+                respond(exchange, 403, "{}", null);
+            } else if (path.endsWith("/rate-429")) respond(exchange, 429, "{}", null);
             else respond(exchange, 200, "{}", null);
         });
         server.start();
@@ -64,6 +73,50 @@ class GitHubClientTest {
         assertThatThrownBy(() -> client.repository(new RepositoryRef("acme", "missing", null)))
                 .isInstanceOf(GitHubFetchException.class)
                 .extracting("kind").isEqualTo(GitHubFetchException.Kind.NOT_FOUND);
+    }
+
+    @Test
+    void requestsExpectedRefTreeAndContentPathsAndPreservesContentEtag() {
+        var ref = new RepositoryRef("acme", "demo", "release/2026");
+        client.commit(ref, "release/2026");
+        assertThat(requestUri).hasValueSatisfying(uri -> {
+            assertThat(uri.getPath()).isEqualTo("/repos/acme/demo/commits/release/2026");
+            assertThat(uri.getRawQuery()).isNull();
+        });
+        client.tree(ref, "abc123");
+        assertThat(requestUri).hasValueSatisfying(uri -> {
+            assertThat(uri.getPath()).isEqualTo("/repos/acme/demo/git/trees/abc123");
+            assertThat(uri.getRawQuery()).isEqualTo("recursive=1");
+        });
+        var response = client.content(ref, "src/etag.ts", "abc123", "\"old-content\"");
+        assertThat(requestUri).hasValueSatisfying(uri -> {
+            assertThat(uri.getPath()).isEqualTo("/repos/acme/demo/contents/src/etag.ts");
+            assertThat(uri.getRawQuery()).isEqualTo("ref=abc123");
+        });
+        assertThat(ifNoneMatch).hasValue("\"old-content\"");
+        assertThat(response.etag()).isEqualTo("\"content-v1\"");
+        assertThat(response.body().decoded()).isEqualTo("a");
+    }
+
+    @Test
+    void distinguishesForbidden403FromRateLimitedResponses() {
+        assertThatThrownBy(() -> client.repository(new RepositoryRef("acme", "forbidden", null)))
+                .isInstanceOf(GitHubFetchException.class).extracting("kind")
+                .isEqualTo(GitHubFetchException.Kind.FORBIDDEN);
+        assertThatThrownBy(() -> client.repository(new RepositoryRef("acme", "rate-403", null)))
+                .isInstanceOf(GitHubFetchException.class).extracting("kind")
+                .isEqualTo(GitHubFetchException.Kind.RATE_LIMITED);
+        assertThatThrownBy(() -> client.repository(new RepositoryRef("acme", "rate-429", null)))
+                .isInstanceOf(GitHubFetchException.class).extracting("kind")
+                .isEqualTo(GitHubFetchException.Kind.RATE_LIMITED);
+    }
+
+    @Test
+    void rejectsMalformedUtf8Content() {
+        var content = new GitHubClient.ContentDto("file", "base64", "/w==", 1L);
+        assertThatThrownBy(content::decodedBytes)
+                .isInstanceOf(GitHubFetchException.class)
+                .extracting("kind").isEqualTo(GitHubFetchException.Kind.UPSTREAM);
     }
 
     @Test

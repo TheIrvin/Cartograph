@@ -1,7 +1,7 @@
 package com.tracemap.ingestion.github;
 
 public class GitHubFetchException extends RuntimeException {
-    public enum Kind { NOT_FOUND, RATE_LIMITED, NOT_MODIFIED, UPSTREAM }
+    public enum Kind { NOT_FOUND, FORBIDDEN, RATE_LIMITED, NOT_MODIFIED, UPSTREAM }
 
     private final Kind kind;
     private final int status;

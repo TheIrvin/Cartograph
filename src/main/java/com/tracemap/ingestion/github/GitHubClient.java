@@ -3,7 +3,6 @@ package com.tracemap.ingestion.github;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tracemap.graph.model.RepositoryRef;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
@@ -58,9 +57,11 @@ public class GitHubClient {
             String responseEtag = response.getHeaders().getFirst(HttpHeaders.ETAG);
             if (status == 304) throw new GitHubFetchException(GitHubFetchException.Kind.NOT_MODIFIED, status, "GitHub response was not modified");
             if (status == 404) throw new GitHubFetchException(GitHubFetchException.Kind.NOT_FOUND, status, "GitHub resource was not found");
-            if (status == 403 || status == 429 || (status >= 400 && response.getHeaders().containsKey("X-RateLimit-Remaining")
-                    && "0".equals(response.getHeaders().getFirst("X-RateLimit-Remaining")))) {
+            if (status == 429 || isRateLimited403(status, response.getHeaders())) {
                 throw new GitHubFetchException(GitHubFetchException.Kind.RATE_LIMITED, status, "GitHub API rate limit exceeded");
+            }
+            if (status == 403) {
+                throw new GitHubFetchException(GitHubFetchException.Kind.FORBIDDEN, status, "GitHub API permission denied");
             }
             if (status < 200 || status >= 300) throw new GitHubFetchException(GitHubFetchException.Kind.UPSTREAM, status, "GitHub API returned HTTP " + status);
             try {
@@ -70,6 +71,13 @@ public class GitHubClient {
                 throw new GitHubFetchException(GitHubFetchException.Kind.UPSTREAM, status, "Invalid GitHub response", exception);
             }
         });
+    }
+
+    private static boolean isRateLimited403(int status, HttpHeaders headers) {
+        if (status != 403) return false;
+        return "0".equals(headers.getFirst("X-RateLimit-Remaining"))
+                || headers.containsKey("Retry-After")
+                || headers.containsKey("X-RateLimit-Reset");
     }
 
     private static String encodePath(String value) {
@@ -82,9 +90,25 @@ public class GitHubClient {
     public record TreeDto(Boolean truncated, List<TreeEntry> tree) { }
     public record TreeEntry(String path, String type, Long size, String sha) { }
     public record ContentDto(String type, String encoding, String content, Long size) {
+        public byte[] decodedBytes() {
+            if (!"base64".equalsIgnoreCase(encoding)) {
+                throw new GitHubFetchException(GitHubFetchException.Kind.UPSTREAM, 200, "Unsupported GitHub content encoding");
+            }
+            try {
+                byte[] bytes = Base64.getMimeDecoder().decode(content == null ? "" : content);
+                // Decode strictly so replacement characters can never enter a snapshot.
+                StandardCharsets.UTF_8.newDecoder()
+                        .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)
+                        .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT)
+                        .decode(java.nio.ByteBuffer.wrap(bytes));
+                return bytes;
+            } catch (java.io.IOException | IllegalArgumentException exception) {
+                throw new GitHubFetchException(GitHubFetchException.Kind.UPSTREAM, 200, "Invalid UTF-8 GitHub content", exception);
+            }
+        }
+
         public String decoded() {
-            if (!"base64".equalsIgnoreCase(encoding)) throw new GitHubFetchException(GitHubFetchException.Kind.UPSTREAM, 200, "Unsupported GitHub content encoding");
-            return new String(Base64.getMimeDecoder().decode(content == null ? "" : content), StandardCharsets.UTF_8);
+            return new String(decodedBytes(), StandardCharsets.UTF_8);
         }
     }
 }

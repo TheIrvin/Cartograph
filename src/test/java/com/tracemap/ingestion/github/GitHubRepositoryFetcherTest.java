@@ -45,7 +45,7 @@ class GitHubRepositoryFetcherTest {
 
     @Test
     void inspectsTreeLimitsBeforeFetchingSupportedContent() {
-        var props = new GitHubProperties("", URI.create("http://localhost:" + server.getAddress().getPort()), new IndexingLimits(1, 5, 5));
+        var props = new GitHubProperties("", URI.create("http://localhost:" + server.getAddress().getPort()), new IndexingLimits(1, 12, 12));
         var fetcher = new GitHubRepositoryFetcher(new GitHubClient(RestClient.builder(), new ObjectMapper(), props), props);
         var snapshot = fetcher.fetch(new RepositoryRef("acme", "demo", null));
         assertThat(snapshot.commitSha()).isEqualTo("abc");
@@ -55,6 +55,15 @@ class GitHubRepositoryFetcherTest {
             assertThat(file.content()).isEqualTo("const a = 1;");
         });
         assertThat(contentRequests).hasValue(1);
+    }
+
+    @Test
+    void validatesActualDecodedContentBeforeAddingFile() {
+        var props = new GitHubProperties("", URI.create("http://localhost:" + server.getAddress().getPort()), new IndexingLimits(1, 1000, 5));
+        var fetcher = new GitHubRepositoryFetcher(new GitHubClient(RestClient.builder(), new ObjectMapper(), props), props);
+        assertThatThrownBy(() -> fetcher.fetch(new RepositoryRef("acme", "demo", null)))
+                .isInstanceOf(com.tracemap.ingestion.RepositoryLimitException.class)
+                .extracting("limit").isEqualTo(IndexingLimits.Limit.FILE_BYTES);
     }
 
     @Test

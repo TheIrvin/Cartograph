@@ -37,6 +37,26 @@ public record IndexingLimits(long maxFileCount, long maxTotalBytes, long maxFile
         if (totalBytes > maxTotalBytes) throw new RepositoryLimitException(Limit.TOTAL_BYTES, totalBytes, maxTotalBytes);
     }
 
+    /** Validate the actual decoded bytes returned for one content response. */
+    public long validateFetchedContent(long fileBytes, long downloadedBytes) {
+        if (fileBytes < 0 || downloadedBytes < 0) {
+            throw new IllegalArgumentException("Content sizes must be non-negative");
+        }
+        if (fileBytes > maxFileBytes) {
+            throw new RepositoryLimitException(Limit.FILE_BYTES, fileBytes, maxFileBytes);
+        }
+        final long cumulative;
+        try {
+            cumulative = Math.addExact(downloadedBytes, fileBytes);
+        } catch (ArithmeticException exception) {
+            throw new RepositoryLimitException(Limit.TOTAL_BYTES, Long.MAX_VALUE, maxTotalBytes);
+        }
+        if (cumulative > maxTotalBytes) {
+            throw new RepositoryLimitException(Limit.TOTAL_BYTES, cumulative, maxTotalBytes);
+        }
+        return cumulative;
+    }
+
     public void validateTree(List<Long> fileSizes) {
         validateFetchedTree(fileSizes);
     }
