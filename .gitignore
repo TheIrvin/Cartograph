@@ -1,2 +1,7 @@
 
 .worktrees/
+.idea/
+*.iml
+target/
+data/
+.env
