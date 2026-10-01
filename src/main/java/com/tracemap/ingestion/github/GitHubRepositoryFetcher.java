@@ -24,6 +24,15 @@ public class GitHubRepositoryFetcher implements RepositoryFetcher {
     }
 
     @Override
+    public String resolveCommit(RepositoryRef ref) {
+        String requested = ref.ref();
+        if (requested == null || requested.isBlank()) {
+            requested = client.repository(ref).body().default_branch();
+        }
+        return client.commit(ref, requested).body().sha();
+    }
+
+    @Override
     public RepositorySnapshot fetch(RepositoryRef ref) {
         GitHubClient.RepositoryDto metadata = client.repository(ref).body();
         String requested = ref.ref() == null ? metadata.default_branch() : ref.ref();

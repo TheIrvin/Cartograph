@@ -16,8 +16,8 @@ server:
 tracemap:
   sqlite:
     path: ./data/tracemap.db
-  github-token: ${GITHUB_TOKEN:}
-  indexing:
+  github:
+    token: ${GITHUB_TOKEN:}
     max-files: 10000
     max-total-bytes: 1073741824
     max-file-bytes: 10485760
