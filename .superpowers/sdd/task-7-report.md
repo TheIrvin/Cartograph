@@ -26,3 +26,11 @@ git diff --check                                                         # PASS
 ## Concerns
 
 - Cache misses currently resolve the commit and then invoke the existing fetcher, so the GitHub metadata/commit lookup is repeated on a miss. This keeps the existing fetcher boundary intact and avoids downloading repository contents on cache hits.
+
+## Review follow-up
+
+- Mapped response metrics to the documented `filesSeen`, `filesParsed`, `nodes`, and `edges` JSON names while retaining the domain metric values (`fileCount`, parsed file count, node count, and edge count).
+- Scoped HTTP 400 handling to URL/request validation exceptions; unexpected `IllegalArgumentException` failures now use the safe HTTP 500 response.
+- Mapped GitHub rate-limit failures to HTTP 429 and added MockMvc regression coverage for both exception boundaries and response metrics.
+
+Focused follow-up tests and the full offline Maven suite pass with Java 17 at `/opt/homebrew/opt/openjdk@17`.

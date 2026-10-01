@@ -11,24 +11,24 @@ import java.util.Locale;
 public final class GitHubUrlNormalizer {
     public RepositoryRef normalize(String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("Repository URL is required");
+            throw new InvalidRepositoryUrlException("Repository URL is required");
         }
         final URI uri;
         try {
             uri = new URI(value);
         } catch (URISyntaxException exception) {
-            throw new IllegalArgumentException("Malformed repository URL", exception);
+            throw new InvalidRepositoryUrlException("Malformed repository URL", exception);
         }
         if (!"https".equalsIgnoreCase(uri.getScheme())
                 || !"github.com".equalsIgnoreCase(uri.getHost())
                 || uri.getPort() != -1
                 || uri.getUserInfo() != null) {
-            throw new IllegalArgumentException("URL must use HTTPS and github.com");
+            throw new InvalidRepositoryUrlException("URL must use HTTPS and github.com");
         }
 
         String rawPath = uri.getRawPath();
         if (rawPath == null || !rawPath.startsWith("/") || rawPath.contains("\\")) {
-            throw new IllegalArgumentException("URL does not contain a repository path");
+            throw new InvalidRepositoryUrlException("URL does not contain a repository path");
         }
         String[] segments = rawPath.substring(1).split("/", -1);
         int trailingEmptySegments = 0;
@@ -37,13 +37,13 @@ public final class GitHubUrlNormalizer {
             trailingEmptySegments++;
         }
         if (trailingEmptySegments > 1) {
-            throw new IllegalArgumentException("URL contains multiple trailing slashes");
+            throw new InvalidRepositoryUrlException("URL contains multiple trailing slashes");
         }
         if (trailingEmptySegments == 1) {
             segments = java.util.Arrays.copyOf(segments, segments.length - 1);
         }
         if (segments.length < 2 || segments[0].isEmpty() || segments[1].isEmpty()) {
-            throw new IllegalArgumentException("URL must contain owner and repository");
+            throw new InvalidRepositoryUrlException("URL must contain owner and repository");
         }
         String owner = decodeSegment(segments[0]);
         String repository = decodeSegment(segments[1]);
@@ -51,7 +51,7 @@ public final class GitHubUrlNormalizer {
             return new RepositoryRef(normalizeName(owner), normalizeRepository(repository), null);
         }
         if (segments.length < 4 || !"tree".equalsIgnoreCase(decodeSegment(segments[2]))) {
-            throw new IllegalArgumentException("Only repository and /tree/{ref} URLs are supported");
+            throw new InvalidRepositoryUrlException("Only repository and /tree/{ref} URLs are supported");
         }
         StringBuilder rawRef = new StringBuilder(segments[3]);
         for (int index = 4; index < segments.length; index++) {
@@ -59,14 +59,14 @@ public final class GitHubUrlNormalizer {
         }
         String ref = decode(rawRef.toString());
         if (ref.isBlank() || hasTraversalSegment(ref)) {
-            throw new IllegalArgumentException("Repository ref is unsafe");
+            throw new InvalidRepositoryUrlException("Repository ref is unsafe");
         }
         return new RepositoryRef(normalizeName(owner), normalizeRepository(repository), ref);
     }
 
     private static String normalizeName(String value) {
         if (value.isBlank() || hasTraversalSegment(value) || value.indexOf('/') >= 0) {
-            throw new IllegalArgumentException("Repository name is unsafe");
+            throw new InvalidRepositoryUrlException("Repository name is unsafe");
         }
         return value.toLowerCase(Locale.ROOT);
     }
@@ -88,7 +88,7 @@ public final class GitHubUrlNormalizer {
     private static String decodeSegment(String value) {
         String decoded = decode(value);
         if (decoded.indexOf('/') >= 0 || decoded.indexOf('\\') >= 0) {
-            throw new IllegalArgumentException("Encoded path separator is not allowed here");
+            throw new InvalidRepositoryUrlException("Encoded path separator is not allowed here");
         }
         return decoded;
     }
@@ -104,11 +104,11 @@ public final class GitHubUrlNormalizer {
             java.io.ByteArrayOutputStream bytes = new java.io.ByteArrayOutputStream();
             while (index < value.length() && value.charAt(index) == '%') {
                 if (index + 2 >= value.length()) {
-                    throw new IllegalArgumentException("Malformed URL escape");
+                    throw new InvalidRepositoryUrlException("Malformed URL escape");
                 }
                 int high = Character.digit(value.charAt(index + 1), 16);
                 int low = Character.digit(value.charAt(index + 2), 16);
-                if (high < 0 || low < 0) throw new IllegalArgumentException("Malformed URL escape");
+                if (high < 0 || low < 0) throw new InvalidRepositoryUrlException("Malformed URL escape");
                 bytes.write((high << 4) | low);
                 index += 3;
             }
