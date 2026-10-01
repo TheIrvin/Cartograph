@@ -7,7 +7,7 @@ spring:
   flyway:
     enabled: false
   datasource:
-    url: jdbc:sqlite:${tracemap.sqlite.path}
+    url: jdbc:sqlite:${tracemap.sqlite.path}?foreign_keys=on
     driver-class-name: org.sqlite.JDBC
 
 server:
