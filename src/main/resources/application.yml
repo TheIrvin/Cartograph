@@ -1,17 +1,21 @@
 spring:
   application:
     name: tracemap
-  datasource:
-    url: jdbc:sqlite:./data/tracemap.db
-    driver-class-name: org.sqlite.JDBC
+  # Flyway does not ship SQLite support in flyway-core alone. Keep migration
+  # execution explicitly off until the SQLite-compatible equivalent is added
+  # with the persistence slice (Task 6).
   flyway:
-    enabled: true
-    locations: classpath:db/migration
+    enabled: false
+  datasource:
+    url: jdbc:sqlite:${tracemap.sqlite.path}
+    driver-class-name: org.sqlite.JDBC
 
 server:
   port: 8080
 
 tracemap:
+  sqlite:
+    path: ./data/tracemap.db
   github-token: ${GITHUB_TOKEN:}
   indexing:
     max-files: 10000
