@@ -53,4 +53,28 @@ class GraphBuilderTest {
         assertTrue(graph.edges().stream().noneMatch(e -> e.kind() == EdgeKind.CALLS));
         assertEquals(1, graph.warnings().size());
     }
+
+    @Test
+    void sameLineDefinitionsHaveDistinctFinalIdsAndPreserveNodeLocations() {
+        var file = new SourceFile("same-line.ts", "function first() {} function second() {}", "typescript");
+        var graph = new GraphBuilder(new JavaScriptTypeScriptParser())
+                .build(new RepositorySnapshot("repo", "sha", List.of(file)));
+
+        var definitions = graph.nodes().stream().filter(n -> n.kind() == SymbolKind.FUNCTION).toList();
+        assertEquals(2, definitions.size());
+        assertNotEquals(definitions.get(0).stableId(), definitions.get(1).stableId());
+        assertNotEquals(definitions.get(0).startColumn(), definitions.get(1).startColumn());
+        assertTrue(definitions.stream().allMatch(n -> n.startLine() == 1 && n.endLine() == 1));
+    }
+
+    @Test
+    void finalSnapshotEdgesRetainParserSourceLocations() {
+        var file = new SourceFile("locations.ts", "function target() {}\nfunction caller() { target(); }", "typescript");
+        var graph = new GraphBuilder(new JavaScriptTypeScriptParser())
+                .build(new RepositorySnapshot("repo", "sha", List.of(file)));
+
+        var call = graph.edges().stream().filter(e -> e.kind() == EdgeKind.CALLS).findFirst().orElseThrow();
+        assertEquals(new SourceLocation("locations.ts", 2, 20, 2, 28), call.location());
+        assertTrue(graph.edges().stream().allMatch(e -> e.location() != null));
+    }
 }

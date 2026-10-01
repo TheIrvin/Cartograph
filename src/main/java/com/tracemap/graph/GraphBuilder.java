@@ -14,12 +14,12 @@ public final class GraphBuilder {
                 .map(parser::parse).toList();
         Map<String, String> ids = new HashMap<>();
         List<GraphNode> nodes = parsed.stream().flatMap(p -> p.nodes().stream()).map(n -> {
-            String id = StableNodeId.create(repository.repository(), repository.commitSha(), n.filePath(), n.kind(), n.name(), n.startLine(), 0);
+            String id = StableNodeId.create(repository.repository(), repository.commitSha(), n.filePath(), n.kind(), n.name(), n.startLine(), n.startColumn());
             ids.put(n.stableId(), id);
-            return new GraphNode(id, n.kind(), n.name(), n.filePath(), n.startLine(), n.endLine());
+            return new GraphNode(id, n.kind(), n.name(), n.filePath(), n.startLine(), n.endLine(), n.startColumn(), n.endColumn());
         }).sorted(Comparator.comparing(GraphNode::stableId)).toList();
         List<GraphEdge> edges = parsed.stream().flatMap(p -> p.edges().stream()).map(e -> new GraphEdge(
-                        ids.getOrDefault(e.fromId(), e.fromId()), ids.getOrDefault(e.toId(), e.toId()), e.kind(), e.confidence()))
+                        ids.getOrDefault(e.fromId(), e.fromId()), ids.getOrDefault(e.toId(), e.toId()), e.kind(), e.confidence(), e.location()))
                 .sorted(Comparator.comparing(GraphEdge::fromId).thenComparing(GraphEdge::toId).thenComparing(GraphEdge::kind)).toList();
         List<GraphWarning> warnings = parsed.stream().flatMap(p -> p.warnings().stream())
                 .sorted(Comparator.comparing(GraphWarning::filePath).thenComparing(w -> Optional.ofNullable(w.line()).orElse(0)).thenComparing(GraphWarning::code)).toList();
