@@ -1,4 +1,4 @@
-# TraceMap — Planning Workspace
+# TraceMap — Spring Boot walking skeleton
 
 > Real call graphs for any repository — accurate, not hallucinated. Paste a GitHub URL, get an interactive, AST-derived call graph with click-to-trace paths.
 
@@ -11,12 +11,37 @@
 | What do I build this week, and in what order? | [`tracemap-execution-plan.md`](./tracemap-execution-plan.md) — situation analysis, 12-wave schedule, deep specs (v2.1) |
 | What's the status of any feature? | [`tracemap-feature-tracker.csv`](./tracemap-feature-tracker.csv) — one row per feature |
 
-## Status snapshot (2026-10-01)
+## Status snapshot (2026-10-02)
 
-- **Stage:** planning complete (v1.1 features / v2.1 execution). **Code: none yet.**
-- **Next action:** execution plan Part III, **Wave 0** (2 days: scaffold, CI, deploys, name/domain lock, competitive scan), then **Wave 1** — the walking skeleton that tests the core parsing bet.
-- **Key schedule fact:** solo full-time ≈ wk 10 to public soft launch (Gate A1), ≈ wk 16 to Show HN (Gate B) + 2-wk buffer. Original "4-week MVP" claim is retired (execution plan §1.2).
-- **Open decision:** product name/domain availability — Wave 0 exit gate, not yet checked.
+- **Stage:** Wave 1 walking skeleton scaffold is verified with Java 17, Maven, Spring Boot, MockMvc, the TypeScript parser, graph builder, and SQLite persistence.
+- **Current endpoint:** `POST /api/v1/index` accepts `{ "repositoryUrl": "https://github.com/<owner>/<repo>" }` and returns the graph snapshot, commit SHA, warnings, and metrics.
+- **Database:** SQLite defaults to `./data/tracemap.db`; override with `tracemap.sqlite.path`.
+
+## Run and test locally
+
+From the repository root on macOS with Homebrew Java 17:
+
+```bash
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:/opt/homebrew/bin:$PATH"
+mvn spring-boot:run
+```
+
+In another terminal, call the indexing endpoint:
+
+```bash
+curl -X POST http://localhost:8080/api/v1/index \
+  -H 'Content-Type: application/json' \
+  -d '{"repositoryUrl":"https://github.com/<owner>/<repo>"}'
+```
+
+Run the complete offline test suite with the same Java 17 setup:
+
+```bash
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:/opt/homebrew/bin:$PATH"
+mvn test
+```
 
 ## Tracker columns
 
