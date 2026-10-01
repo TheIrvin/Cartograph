@@ -15,4 +15,4 @@ JAVA_HOME=/opt/homebrew/opt/openjdk@17 PATH="$JAVA_HOME/bin:$PATH" mvn -Dtest='c
 
 Full suite also passes with `mvn test` under the same Java 17 environment.
 
-Concern: the adapter intentionally treats arrow-function definitions as unsupported and unresolved/dynamic calls as warnings; this is required by the task's no-invented-relationships rule.
+Review follow-up: relationship resolution now uses Tree-sitter AST scope/binding/mutation facts only; comments, strings, unrelated scopes, nested bindings, and dynamic calls cannot suppress proven calls. Exports and direct call sites carry source locations. Parser IDs intentionally have empty repository/commit context; `GraphBuilder` is documented and tested as the sole owner of final repository/commit-scoped IDs.

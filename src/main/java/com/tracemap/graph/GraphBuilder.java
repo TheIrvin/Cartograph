@@ -5,6 +5,7 @@ import com.tracemap.graph.model.*;
 import java.util.*;
 
 public final class GraphBuilder {
+    // Parsers intentionally use empty repository/commit context; this is the sole owner of final snapshot IDs.
     private final SourceParser parser;
     public GraphBuilder(SourceParser parser) { this.parser = Objects.requireNonNull(parser); }
 

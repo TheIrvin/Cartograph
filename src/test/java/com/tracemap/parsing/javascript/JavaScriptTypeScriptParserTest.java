@@ -25,6 +25,8 @@ class JavaScriptTypeScriptParserTest {
                 "FUNCTION:run:7:10", "CLASS:Greeter:12:16", "METHOD:Greeter.say:13:15"),
                 result.nodes().stream().map(n -> n.kind() + ":" + n.name() + ":" + n.startLine() + ":" + n.endLine()).toList());
         assertEquals(List.of("greet", "run", "Greeter"), result.exports());
+        assertTrue(result.exportDetails().stream().allMatch(exported -> exported.location() != null));
+        assertTrue(result.directCallSites().stream().allMatch(call -> call.location().startLine() >= 1));
         assertEquals(2, result.edges().stream().filter(e -> e.kind() == EdgeKind.CALLS).count());
         assertEquals(1, result.edges().stream().filter(e -> e.kind() == EdgeKind.IMPORTS).count());
         assertTrue(result.edges().stream().allMatch(e -> e.confidence() == 1.0));
