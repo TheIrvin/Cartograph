@@ -27,6 +27,14 @@ class GitHubUrlNormalizerTest {
     }
 
     @Test
+    void rejectsExtraTrailingSlashes() {
+        assertThrows(IllegalArgumentException.class,
+                () -> normalizer.normalize("https://github.com/octocat/hello-world////"));
+        assertThrows(IllegalArgumentException.class,
+                () -> normalizer.normalize("https://github.com/octocat/hello-world/tree/main////"));
+    }
+
+    @Test
     void rejectsMalformedOrUnsafeUrls() {
         String[] invalid = {
                 "http://github.com/octocat/hello-world",

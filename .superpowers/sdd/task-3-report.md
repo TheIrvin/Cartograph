@@ -42,3 +42,23 @@ Also ran `git diff --check` successfully.
 
 - The current task brief requested an ingestion-package `RepositoryRef`, but the implementation intentionally follows the task instruction to use the existing shared graph model type.
 - No full-project Maven test run was required for this focused task.
+
+## Review Fix
+
+- Updated `GitHubUrlNormalizer` to allow zero or one trailing slash, while rejecting multiple trailing empty path segments.
+- Added regression coverage for `/owner/repo////` and `/owner/repo/tree/main////`.
+- Continued using the shared `com.tracemap.graph.model.RepositoryRef` type.
+
+## Review-Fix Verification
+
+Command:
+
+```bash
+JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home \
+PATH="$JAVA_HOME/bin:$PATH" \
+mvn -Dtest='com.tracemap.ingestion.*Test' test
+```
+
+Result: **PASS** — 10 tests, 0 failures, 0 errors, 0 skipped; Maven reported `BUILD SUCCESS`.
+
+Also ran `git diff --check` successfully.

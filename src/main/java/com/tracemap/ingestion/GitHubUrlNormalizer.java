@@ -31,7 +31,15 @@ public final class GitHubUrlNormalizer {
             throw new IllegalArgumentException("URL does not contain a repository path");
         }
         String[] segments = rawPath.substring(1).split("/", -1);
-        while (segments.length > 0 && segments[segments.length - 1].isEmpty()) {
+        int trailingEmptySegments = 0;
+        while (trailingEmptySegments < segments.length
+                && segments[segments.length - 1 - trailingEmptySegments].isEmpty()) {
+            trailingEmptySegments++;
+        }
+        if (trailingEmptySegments > 1) {
+            throw new IllegalArgumentException("URL contains multiple trailing slashes");
+        }
+        if (trailingEmptySegments == 1) {
             segments = java.util.Arrays.copyOf(segments, segments.length - 1);
         }
         if (segments.length < 2 || segments[0].isEmpty() || segments[1].isEmpty()) {
