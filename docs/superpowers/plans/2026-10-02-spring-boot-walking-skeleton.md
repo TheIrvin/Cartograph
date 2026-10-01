@@ -100,7 +100,6 @@ Expected: PASS.
 
 **Files:**
 - Create: `src/main/java/com/tracemap/ingestion/GitHubUrlNormalizer.java`
-- Create: `src/main/java/com/tracemap/ingestion/RepositoryRef.java`
 - Create: `src/main/java/com/tracemap/ingestion/IndexingLimits.java`
 - Create: `src/main/java/com/tracemap/ingestion/RepositoryLimitException.java`
 - Test: `src/test/java/com/tracemap/ingestion/GitHubUrlNormalizerTest.java`
@@ -112,7 +111,7 @@ Cover canonical URLs, trailing slashes, `/tree/{branch}` URLs, query/fragment re
 
 - [ ] **Step 2: Implement normalization**
 
-Accept only HTTPS GitHub repository URLs. Normalize owner/repository, preserve an optional branch/ref, reject extra repository path segments except supported `/tree/...` forms, and return a typed `RepositoryRef`.
+Accept only HTTPS GitHub repository URLs. Normalize owner/repository, preserve an optional branch/ref, reject extra repository path segments except supported `/tree/...` forms, and return the shared `com.tracemap.graph.model.RepositoryRef` domain value defined in Task 2. Do not create a second ingestion-specific `RepositoryRef` type.
 
 - [ ] **Step 3: Implement configurable limits**
 
