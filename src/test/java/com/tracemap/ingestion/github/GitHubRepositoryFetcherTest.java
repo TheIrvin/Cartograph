@@ -54,6 +54,11 @@ class GitHubRepositoryFetcherTest {
             assertThat(file.language()).isEqualTo("typescript");
             assertThat(file.content()).isEqualTo("const a = 1;");
         });
+        assertThat(snapshot.filesSeen()).isEqualTo(2);
+        assertThat(snapshot.warnings()).singleElement().satisfies(warning -> {
+            assertThat(warning.code()).isEqualTo("UNSUPPORTED_FILE");
+            assertThat(warning.filePath()).isEqualTo("README.md");
+        });
         assertThat(contentRequests).hasValue(1);
     }
 

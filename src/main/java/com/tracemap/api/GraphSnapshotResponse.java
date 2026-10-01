@@ -17,7 +17,7 @@ public record GraphSnapshotResponse(String repository, String commitSha, List<Gr
 
     public record Metrics(int filesSeen, int filesParsed, int nodes, int edges) {
         static Metrics from(GraphMetrics metrics) {
-            return new Metrics(metrics.fileCount(), metrics.fileCount(), metrics.nodeCount(), metrics.edgeCount());
+            return new Metrics(metrics.filesSeen(), metrics.filesParsed(), metrics.nodeCount(), metrics.edgeCount());
         }
     }
 }

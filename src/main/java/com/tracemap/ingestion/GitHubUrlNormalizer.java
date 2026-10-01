@@ -65,7 +65,8 @@ public final class GitHubUrlNormalizer {
     }
 
     private static String normalizeName(String value) {
-        if (value.isBlank() || hasTraversalSegment(value) || value.indexOf('/') >= 0) {
+        if (value.isBlank() || hasTraversalSegment(value) || value.indexOf('/') >= 0
+                || !value.matches("[A-Za-z0-9][A-Za-z0-9._-]*")) {
             throw new InvalidRepositoryUrlException("Repository name is unsafe");
         }
         return value.toLowerCase(Locale.ROOT);
@@ -73,7 +74,9 @@ public final class GitHubUrlNormalizer {
 
     private static String normalizeRepository(String value) {
         String normalized = normalizeName(value);
-        return normalized.endsWith(".git") ? normalized.substring(0, normalized.length() - 4) : normalized;
+        normalized = normalized.endsWith(".git") ? normalized.substring(0, normalized.length() - 4) : normalized;
+        if (normalized.isBlank() || normalized.equals(".") || normalized.equals(".git")) throw new InvalidRepositoryUrlException("Repository name is unsafe");
+        return normalized;
     }
 
     private static boolean hasTraversalSegment(String value) {

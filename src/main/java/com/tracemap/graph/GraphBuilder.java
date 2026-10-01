@@ -21,9 +21,9 @@ public final class GraphBuilder {
         List<GraphEdge> edges = parsed.stream().flatMap(p -> p.edges().stream()).map(e -> new GraphEdge(
                         ids.getOrDefault(e.fromId(), e.fromId()), ids.getOrDefault(e.toId(), e.toId()), e.kind(), e.confidence(), e.location()))
                 .sorted(Comparator.comparing(GraphEdge::fromId).thenComparing(GraphEdge::toId).thenComparing(GraphEdge::kind)).toList();
-        List<GraphWarning> warnings = parsed.stream().flatMap(p -> p.warnings().stream())
+        List<GraphWarning> warnings = java.util.stream.Stream.concat(repository.warnings().stream(), parsed.stream().flatMap(p -> p.warnings().stream()))
                 .sorted(Comparator.comparing(GraphWarning::filePath).thenComparing(w -> Optional.ofNullable(w.line()).orElse(0)).thenComparing(GraphWarning::code)).toList();
         return new GraphSnapshot(repository.repository(), repository.commitSha(), nodes, edges, warnings,
-                new GraphMetrics(nodes.size(), edges.size(), warnings.size(), repository.files().size()));
+                new GraphMetrics(nodes.size(), edges.size(), warnings.size(), repository.filesSeen(), repository.files().size()));
     }
 }

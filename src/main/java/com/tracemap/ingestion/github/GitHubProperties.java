@@ -13,6 +13,7 @@ public class GitHubProperties {
     private long maxFiles = 10_000;
     private long maxTotalBytes = 1_073_741_824;
     private long maxFileBytes = 10_485_760;
+    private long maxResponseBytes = 33_554_432;
 
     public GitHubProperties() { }
 
@@ -27,9 +28,11 @@ public class GitHubProperties {
     public String token() { return token; }
     public URI baseUrl() { return baseUrl; }
     public IndexingLimits limits() { return new IndexingLimits(maxFiles, maxTotalBytes, maxFileBytes); }
+    public long maxResponseBytes() { return maxResponseBytes; }
     public void setToken(String token) { this.token = token == null ? "" : token; }
     public void setBaseUrl(URI baseUrl) { this.baseUrl = baseUrl; }
     public void setMaxFiles(long value) { this.maxFiles = value; }
     public void setMaxTotalBytes(long value) { this.maxTotalBytes = value; }
     public void setMaxFileBytes(long value) { this.maxFileBytes = value; }
+    public void setMaxResponseBytes(long value) { this.maxResponseBytes = value; }
 }

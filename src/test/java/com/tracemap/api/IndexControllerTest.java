@@ -5,6 +5,8 @@ import com.tracemap.application.IndexRepositoryService;
 import com.tracemap.graph.model.GraphMetrics;
 import com.tracemap.graph.model.GraphSnapshot;
 import com.tracemap.ingestion.InvalidRepositoryUrlException;
+import com.tracemap.ingestion.RepositoryLimitException;
+import com.tracemap.ingestion.IndexingLimits;
 import com.tracemap.ingestion.github.GitHubFetchException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +80,16 @@ class IndexControllerTest {
                         .content("{\"repositoryUrl\":\"https://github.com/acme/widgets\"}"))
                 .andExpect(status().isTooManyRequests())
                 .andExpect(jsonPath("$.code").value("UPSTREAM_GITHUB_ERROR"));
+    }
+
+    @Test
+    void mapsRepositoryLimitToPayloadTooLarge() throws Exception {
+        when(service.index("https://github.com/acme/widgets"))
+                .thenThrow(new RepositoryLimitException(IndexingLimits.Limit.FILE_BYTES, 11, 10));
+
+        mvc.perform(post("/api/v1/index").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"repositoryUrl\":\"https://github.com/acme/widgets\"}"))
+                .andExpect(status().isPayloadTooLarge())
+                .andExpect(jsonPath("$.code").value("REPOSITORY_LIMIT_EXCEEDED"));
     }
 }

@@ -128,6 +128,17 @@ class GitHubClientTest {
         assertThat(authorization).hasValue(null);
     }
 
+    @Test
+    void rejectsOversizedContentLengthBeforeMaterializingBody() {
+        GitHubProperties properties = new GitHubProperties("", URI.create("http://localhost:" + server.getAddress().getPort()),
+                new com.tracemap.ingestion.IndexingLimits(10, 1000, 100));
+        properties.setMaxResponseBytes(8);
+        GitHubClient bounded = new GitHubClient(RestClient.builder(), new ObjectMapper(), properties);
+        assertThatThrownBy(() -> bounded.repository(new RepositoryRef("acme", "demo", null)))
+                .isInstanceOf(GitHubFetchException.class)
+                .extracting("status").isEqualTo(413);
+    }
+
     private static void respond(com.sun.net.httpserver.HttpExchange exchange, int status, String body, String etag) throws java.io.IOException {
         if (etag != null) exchange.getResponseHeaders().set("ETag", etag);
         byte[] bytes = body.getBytes(StandardCharsets.UTF_8);

@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -31,22 +32,23 @@ public class GitHubClient {
 
     public Response<RepositoryDto> repository(RepositoryRef ref) { return repository(ref, null); }
     public Response<RepositoryDto> repository(RepositoryRef ref, String etag) {
-        return get("/repos/" + ref.owner() + "/" + ref.repository(), RepositoryDto.class, etag);
+        return get("/repos/" + ref.owner() + "/" + ref.repository(), RepositoryDto.class, etag, properties.maxResponseBytes());
     }
 
     public Response<CommitDto> commit(RepositoryRef ref, String requestedRef) {
-        return get("/repos/" + ref.owner() + "/" + ref.repository() + "/commits/" + encodePath(requestedRef), CommitDto.class, null);
+        return get("/repos/" + ref.owner() + "/" + ref.repository() + "/commits/" + encodePath(requestedRef), CommitDto.class, null, properties.maxResponseBytes());
     }
 
     public Response<TreeDto> tree(RepositoryRef ref, String sha) {
-        return get("/repos/" + ref.owner() + "/" + ref.repository() + "/git/trees/" + encodePath(sha) + "?recursive=1", TreeDto.class, null);
+        return get("/repos/" + ref.owner() + "/" + ref.repository() + "/git/trees/" + encodePath(sha) + "?recursive=1", TreeDto.class, null, properties.maxResponseBytes());
     }
 
     public Response<ContentDto> content(RepositoryRef ref, String path, String sha, String etag) {
-        return get("/repos/" + ref.owner() + "/" + ref.repository() + "/contents/" + encodePath(path) + "?ref=" + encodePath(sha), ContentDto.class, etag);
+        long encodedContentLimit = Math.min(properties.maxResponseBytes(), encodedContentLimit(properties.limits().maxFileBytes()));
+        return get("/repos/" + ref.owner() + "/" + ref.repository() + "/contents/" + encodePath(path) + "?ref=" + encodePath(sha), ContentDto.class, etag, encodedContentLimit);
     }
 
-    private <T> Response<T> get(String path, Class<T> type, String etag) {
+    private <T> Response<T> get(String path, Class<T> type, String etag, long responseLimit) {
         return http.get().uri(path).headers(headers -> {
             headers.set(HttpHeaders.ACCEPT, "application/vnd.github+json");
             headers.set(HttpHeaders.USER_AGENT, "TraceMap");
@@ -65,12 +67,37 @@ public class GitHubClient {
             }
             if (status < 200 || status >= 300) throw new GitHubFetchException(GitHubFetchException.Kind.UPSTREAM, status, "GitHub API returned HTTP " + status);
             try {
-                byte[] bytes = response.getBody().readAllBytes();
+                byte[] bytes = readBounded(response.getBody(), response.getHeaders().getContentLength(), responseLimit);
                 return new Response<>(mapper.readValue(bytes, type), responseEtag);
-            } catch (IOException exception) {
+            } catch (IOException | IllegalArgumentException exception) {
                 throw new GitHubFetchException(GitHubFetchException.Kind.UPSTREAM, status, "Invalid GitHub response", exception);
             }
         });
+    }
+
+    private static long encodedContentLimit(long maxFileBytes) {
+        try {
+            return Math.addExact(Math.multiplyExact(Math.addExact(maxFileBytes, 2) / 3, 4), 4096);
+        } catch (ArithmeticException exception) {
+            return Long.MAX_VALUE;
+        }
+    }
+
+    private static byte[] readBounded(InputStream body, long contentLength, long maxBytes) throws IOException {
+        if (maxBytes <= 0) throw new IllegalArgumentException("Maximum response size must be positive");
+        if (contentLength > maxBytes) throw new GitHubFetchException(GitHubFetchException.Kind.UPSTREAM, 413,
+                "GitHub response exceeded the configured response limit");
+        java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream((int) Math.min(maxBytes, 8192));
+        byte[] buffer = new byte[8192];
+        long total = 0;
+        int read;
+        while ((read = body.read(buffer)) != -1) {
+            total += read;
+            if (total > maxBytes) throw new GitHubFetchException(GitHubFetchException.Kind.UPSTREAM, 413,
+                    "GitHub response exceeded the configured response limit");
+            output.write(buffer, 0, read);
+        }
+        return output.toByteArray();
     }
 
     private static boolean isRateLimited403(int status, HttpHeaders headers) {

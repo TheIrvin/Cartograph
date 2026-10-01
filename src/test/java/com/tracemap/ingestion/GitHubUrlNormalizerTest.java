@@ -46,6 +46,8 @@ class GitHubUrlNormalizerTest {
                 "https://github.com/octocat/hello-world/tree/%2e%2e/secret",
                 "https://github.com/octocat/hello-world/tree/main%2F..%2Fsecret",
                 "https://github.com/octocat/hello-world/tree/"
+                ,"https://github.com/octocat/.git"
+                ,"https://github.com/octocat/.git.git"
         };
         for (String url : invalid) {
             assertThrows(IllegalArgumentException.class, () -> normalizer.normalize(url), url);

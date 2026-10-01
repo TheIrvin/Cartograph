@@ -43,6 +43,26 @@ export PATH="$JAVA_HOME/bin:/opt/homebrew/bin:$PATH"
 mvn test
 ```
 
+### API errors
+
+Errors use a stable `{ "code": "...", "message": "..." }` body. Current mappings are:
+
+| HTTP status | code | Meaning |
+|---|---|---|
+| 400 | `INVALID_REQUEST` | Invalid JSON, blank URL, or invalid GitHub URL |
+| 413 | `REPOSITORY_LIMIT_EXCEEDED` | Repository exceeds configured file/count/byte limits |
+| 404 | `UPSTREAM_GITHUB_ERROR` | GitHub repository or resource was not found |
+| 403 | `UPSTREAM_GITHUB_ERROR` | GitHub denied access |
+| 429 | `UPSTREAM_GITHUB_ERROR` | GitHub rate limit was exceeded |
+| 502 | `UPSTREAM_GITHUB_ERROR` | GitHub returned an unusable or unexpected response |
+| 500 | `INTERNAL_ERROR` | Unexpected server failure |
+
+Example limit response:
+
+```json
+{"code":"REPOSITORY_LIMIT_EXCEEDED","message":"Repository exceeds indexing limits."}
+```
+
 ## Tracker columns
 
 `id` (permanent `F{phase}.{nn}`) · `feature` · `epic` · `phase` · `priority` (P0–P3) · `effort` (XS–XL) · `depends_on` · `status` (⬜🟡🔵✅🚫❌) · `wave` (the wave where the feature's **full acceptance criteria** pass; minimal-first slices land earlier and stay 🟡 — see feature plan §0.4).

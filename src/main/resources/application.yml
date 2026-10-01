@@ -21,3 +21,4 @@ tracemap:
     max-files: 10000
     max-total-bytes: 1073741824
     max-file-bytes: 10485760
+    max-response-bytes: 33554432

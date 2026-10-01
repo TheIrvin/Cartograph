@@ -4,6 +4,7 @@ import com.tracemap.application.RepositoryFetcher;
 import com.tracemap.graph.model.RepositoryRef;
 import com.tracemap.graph.model.RepositorySnapshot;
 import com.tracemap.graph.model.SourceFile;
+import com.tracemap.graph.model.GraphWarning;
 import com.tracemap.ingestion.IndexingLimits;
 
 import java.util.ArrayList;
@@ -40,8 +41,9 @@ public class GitHubRepositoryFetcher implements RepositoryFetcher {
         GitHubClient.TreeDto tree = client.tree(ref, sha).body();
         if (Boolean.TRUE.equals(tree.truncated())) throw new GitHubFetchException(GitHubFetchException.Kind.UPSTREAM, 200, "GitHub tree response was truncated");
 
-        List<GitHubClient.TreeEntry> candidates = tree.tree().stream()
-                .filter(entry -> "blob".equals(entry.type()) && supported(entry.path()))
+        List<GitHubClient.TreeEntry> blobs = tree.tree().stream().filter(entry -> "blob".equals(entry.type())).toList();
+        List<GitHubClient.TreeEntry> candidates = blobs.stream()
+                .filter(entry -> supported(entry.path()))
                 .toList();
         limits.validateFetchedTree(candidates.stream().map(entry -> entry.size() == null ? 0L : entry.size()).toList());
         List<SourceFile> files = new ArrayList<>(candidates.size());
@@ -51,7 +53,9 @@ public class GitHubRepositoryFetcher implements RepositoryFetcher {
             downloadedBytes = limits.validateFetchedContent(contentBytes.length, downloadedBytes);
             files.add(new SourceFile(entry.path(), new String(contentBytes, java.nio.charset.StandardCharsets.UTF_8), language(entry.path())));
         }
-        return new RepositorySnapshot(ref.coordinate(), sha, files);
+        List<GraphWarning> warnings = blobs.stream().filter(entry -> !supported(entry.path()))
+                .map(entry -> new GraphWarning("UNSUPPORTED_FILE", "File type is not supported and was skipped", entry.path(), null)).toList();
+        return new RepositorySnapshot(ref.coordinate(), sha, files, warnings, blobs.size());
     }
 
     private static boolean supported(String path) {
