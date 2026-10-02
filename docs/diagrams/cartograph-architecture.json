@@ -10,56 +10,282 @@
       "provider": "github",
       "link_mode": "web",
       "revision": "a51a4eb51365422f95d3433c50edf350820a4d28"
-    }
+    },
+    "animation": "trace"
   },
   "components": [
-    { "id": "client", "type": "external", "label": "Client", "sublabel": "curl · browser · CI", "pos": [40, 90], "size": [130, 64] },
-    { "id": "api", "type": "backend", "label": "IndexController", "sublabel": "REST adapter · /api/v1", "pos": [310, 90], "size": [190, 64], "sources": [
-      { "path": "src/main/java/com/cartograph/api/IndexController.java", "line": 13, "end_line": 21, "label": "POST /index mapping" },
-      { "path": "src/main/java/com/cartograph/api/ApiExceptionHandler.java", "line": 20, "end_line": 34, "label": "stable {code, message} errors" }
-    ] },
-    { "id": "service", "type": "backend", "label": "IndexRepositoryService", "sublabel": "application core — indexing use case", "pos": [570, 82], "size": [210, 80], "sources": [
-      { "path": "src/main/java/com/cartograph/application/IndexRepositoryService.java", "line": 28, "end_line": 32, "label": "orchestrates ports" }
-    ] },
-    { "id": "fetcher", "type": "backend", "label": "GitHubRepositoryFetcher", "sublabel": "ingestion.github adapter", "pos": [270, 330], "size": [180, 68], "sources": [
-      { "path": "src/main/java/com/cartograph/application/RepositoryFetcher.java", "line": 7, "label": "driven port" },
-      { "path": "src/main/java/com/cartograph/ingestion/github/GitHubRepositoryFetcher.java", "line": 14, "end_line": 16, "label": "implements port" },
-      { "path": "src/main/java/com/cartograph/ingestion/github/GitHubClient.java", "line": 22, "end_line": 23, "label": "RestClient calls" }
-    ] },
-    { "id": "parser", "type": "backend", "label": "JavaScriptTypeScriptParser", "sublabel": "parsing.javascript adapter", "pos": [495, 330], "size": [180, 68], "sources": [
-      { "path": "src/main/java/com/cartograph/application/SourceParser.java", "line": 7, "label": "driven port" },
-      { "path": "src/main/java/com/cartograph/parsing/javascript/JavaScriptTypeScriptParser.java", "line": 11, "end_line": 13, "label": "tree-sitter extractor" }
-    ] },
-    { "id": "store-adapter", "type": "backend", "label": "SQLiteGraphSnapshotRepository", "sublabel": "persistence.sqlite adapter", "pos": [760, 330], "size": [200, 68], "sources": [
-      { "path": "src/main/java/com/cartograph/application/GraphSnapshotRepository.java", "line": 7, "label": "driven port" },
-      { "path": "src/main/java/com/cartograph/persistence/sqlite/SQLiteGraphSnapshotRepository.java", "line": 29, "end_line": 31, "label": "implements port" }
-    ] },
-    { "id": "github-api", "type": "external", "label": "GitHub REST API", "sublabel": "external · optional GITHUB_TOKEN", "pos": [20, 330], "size": [170, 68] },
-    { "id": "sqlite-file", "type": "database", "label": "SQLite file", "sublabel": "jdbc:sqlite · cartograph.db", "pos": [760, 460], "size": [200, 64], "sources": [
-      { "path": "src/main/resources/application.yml", "line": 10, "end_line": 18, "label": "datasource + snapshot path" }
-    ] }
+    {
+      "id": "client",
+      "type": "external",
+      "label": "Client",
+      "sublabel": "curl · browser · CI",
+      "pos": [
+        40,
+        90
+      ],
+      "size": [
+        130,
+        64
+      ]
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "IndexController",
+      "sublabel": "REST adapter · /api/v1",
+      "pos": [
+        310,
+        90
+      ],
+      "size": [
+        190,
+        64
+      ],
+      "sources": [
+        {
+          "path": "src/main/java/com/cartograph/api/IndexController.java",
+          "line": 13,
+          "end_line": 21,
+          "label": "POST /index mapping"
+        },
+        {
+          "path": "src/main/java/com/cartograph/api/ApiExceptionHandler.java",
+          "line": 20,
+          "end_line": 34,
+          "label": "stable {code, message} errors"
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "type": "backend",
+      "label": "IndexRepositoryService",
+      "sublabel": "application core — indexing use case",
+      "pos": [
+        570,
+        82
+      ],
+      "size": [
+        210,
+        80
+      ],
+      "sources": [
+        {
+          "path": "src/main/java/com/cartograph/application/IndexRepositoryService.java",
+          "line": 28,
+          "end_line": 32,
+          "label": "orchestrates ports"
+        }
+      ]
+    },
+    {
+      "id": "fetcher",
+      "type": "backend",
+      "label": "GitHubRepositoryFetcher",
+      "sublabel": "ingestion.github adapter",
+      "pos": [
+        270,
+        330
+      ],
+      "size": [
+        180,
+        68
+      ],
+      "sources": [
+        {
+          "path": "src/main/java/com/cartograph/application/RepositoryFetcher.java",
+          "line": 7,
+          "label": "driven port"
+        },
+        {
+          "path": "src/main/java/com/cartograph/ingestion/github/GitHubRepositoryFetcher.java",
+          "line": 14,
+          "end_line": 16,
+          "label": "implements port"
+        },
+        {
+          "path": "src/main/java/com/cartograph/ingestion/github/GitHubClient.java",
+          "line": 22,
+          "end_line": 23,
+          "label": "RestClient calls"
+        }
+      ]
+    },
+    {
+      "id": "parser",
+      "type": "backend",
+      "label": "JavaScriptTypeScriptParser",
+      "sublabel": "parsing.javascript adapter",
+      "pos": [
+        495,
+        330
+      ],
+      "size": [
+        180,
+        68
+      ],
+      "sources": [
+        {
+          "path": "src/main/java/com/cartograph/application/SourceParser.java",
+          "line": 7,
+          "label": "driven port"
+        },
+        {
+          "path": "src/main/java/com/cartograph/parsing/javascript/JavaScriptTypeScriptParser.java",
+          "line": 11,
+          "end_line": 13,
+          "label": "tree-sitter extractor"
+        }
+      ]
+    },
+    {
+      "id": "store-adapter",
+      "type": "backend",
+      "label": "SQLiteGraphSnapshotRepository",
+      "sublabel": "persistence.sqlite adapter",
+      "pos": [
+        760,
+        330
+      ],
+      "size": [
+        200,
+        68
+      ],
+      "sources": [
+        {
+          "path": "src/main/java/com/cartograph/application/GraphSnapshotRepository.java",
+          "line": 7,
+          "label": "driven port"
+        },
+        {
+          "path": "src/main/java/com/cartograph/persistence/sqlite/SQLiteGraphSnapshotRepository.java",
+          "line": 29,
+          "end_line": 31,
+          "label": "implements port"
+        }
+      ]
+    },
+    {
+      "id": "github-api",
+      "type": "external",
+      "label": "GitHub REST API",
+      "sublabel": "external · optional GITHUB_TOKEN",
+      "pos": [
+        20,
+        330
+      ],
+      "size": [
+        170,
+        68
+      ]
+    },
+    {
+      "id": "sqlite-file",
+      "type": "database",
+      "label": "SQLite file",
+      "sublabel": "jdbc:sqlite · cartograph.db",
+      "pos": [
+        760,
+        460
+      ],
+      "size": [
+        200,
+        64
+      ],
+      "sources": [
+        {
+          "path": "src/main/resources/application.yml",
+          "line": 10,
+          "end_line": 18,
+          "label": "datasource + snapshot path"
+        }
+      ]
+    }
   ],
   "boundaries": [
-    { "kind": "region", "label": "Cartograph service — Spring Boot runtime", "wraps": ["api", "service", "fetcher", "parser", "store-adapter"] }
+    {
+      "kind": "region",
+      "label": "Cartograph service — Spring Boot runtime",
+      "wraps": [
+        "api",
+        "service",
+        "fetcher",
+        "parser",
+        "store-adapter"
+      ]
+    }
   ],
   "connections": [
-    { "id": "client-to-api", "from": "client", "to": "api", "label": "POST /api/v1/index", "variant": "emphasis" },
-    { "id": "api-to-service", "from": "api", "to": "service", "label": "invoke" },
-    { "id": "service-to-fetcher", "from": "service", "to": "fetcher", "label": "«RepositoryFetcher»", "variant": "dashed" },
-    { "id": "service-to-parser", "from": "service", "to": "parser", "label": "«SourceParser»", "variant": "dashed" },
-    { "id": "service-to-store", "from": "service", "to": "store-adapter", "label": "«GraphSnapshotRepository»", "variant": "dashed", "fromSide": "right", "toSide": "top" },
-    { "id": "fetcher-to-github", "from": "fetcher", "to": "github-api", "label": "HTTPS", "fromSide": "left", "toSide": "right" },
-    { "id": "store-to-file", "from": "store-adapter", "to": "sqlite-file", "label": "JDBC", "fromSide": "bottom", "toSide": "top" }
+    {
+      "id": "client-to-api",
+      "from": "client",
+      "to": "api",
+      "label": "POST /api/v1/index",
+      "variant": "emphasis"
+    },
+    {
+      "id": "api-to-service",
+      "from": "api",
+      "to": "service",
+      "label": "invoke"
+    },
+    {
+      "id": "service-to-fetcher",
+      "from": "service",
+      "to": "fetcher",
+      "label": "«RepositoryFetcher»",
+      "variant": "dashed"
+    },
+    {
+      "id": "service-to-parser",
+      "from": "service",
+      "to": "parser",
+      "label": "«SourceParser»",
+      "variant": "dashed"
+    },
+    {
+      "id": "service-to-store",
+      "from": "service",
+      "to": "store-adapter",
+      "label": "«GraphSnapshotRepository»",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "top"
+    },
+    {
+      "id": "fetcher-to-github",
+      "from": "fetcher",
+      "to": "github-api",
+      "label": "HTTPS",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "store-to-file",
+      "from": "store-adapter",
+      "to": "sqlite-file",
+      "label": "JDBC",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
   ],
   "cards": [
-    { "dot": "cyan", "title": "Ports & adapters", "items": [
-      "application owns three ports: RepositoryFetcher, SourceParser, GraphSnapshotRepository",
-      "ingestion / parsing / persistence adapters implement them — the core stays framework-free"
-    ] },
-    { "dot": "amber", "title": "Guardrails & response", "items": [
-      "file-count and byte caps reject oversized repositories",
-      "GitHub client: bounded retries, timeouts, ETag cache",
-      "stable {code, message} errors; synchronous GraphSnapshotResponse JSON"
-    ] }
+    {
+      "dot": "cyan",
+      "title": "Ports & adapters",
+      "items": [
+        "application owns three ports: RepositoryFetcher, SourceParser, GraphSnapshotRepository",
+        "ingestion / parsing / persistence adapters implement them — the core stays framework-free"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Guardrails & response",
+      "items": [
+        "file-count and byte caps reject oversized repositories",
+        "GitHub client: bounded retries, timeouts, ETag cache",
+        "stable {code, message} errors; synchronous GraphSnapshotResponse JSON"
+      ]
+    }
   ]
 }
