@@ -240,7 +240,7 @@ Everything else sits on this. Kept deliberately small — no infra beyond what a
 **Depends on:** F0.02.
 
 #### F0.08 — GitHub API client `P0 · M`
-**Status:** 🟡 — Bounded REST fetcher, ETag primitives, and error mapping tested offline; one live public-repository indexing smoke check passed. Broader live acceptance and retry/backoff remain unverified.
+**Status:** 🟡 — Bounded retry/backoff, primary/secondary limit handling, timeouts, validated responses, bounded ETag reuse, and single-resolution SHA-pinned fetching implemented with offline regression tests. Prior unauthenticated live smoke check passed. Live authenticated acceptance is blocked on server-side `GITHUB_TOKEN`; large-repo clone routing remains dependent on F0.09. No completion claimed.
 **Story:** As the ingestion pipeline, I need a resilient GitHub REST client: repo metadata, recursive git tree, file contents, latest commit SHA.
 **Sub-tasks:** typed client with ETag conditional requests; rate-limit accounting (primary + secondary limits) with exponential backoff; optional `GITHUB_TOKEN` (server-side only) to raise limits; per-repo fetch plan (tree API for small repos, clone for big ones).
 **Acceptance criteria:**
@@ -938,6 +938,8 @@ North-star funnel for Gate B/C: `diagram_viewed → trace_started` (target ≥ 4
 ## 9. Changelog
 
 Tracking log — append one line per status change (see §0.4).
+
+2026-10-03 · F0.08 remains 🟡 · resilience and pinned-fetch implementation passes combined 141-test suite; token-backed live acceptance and large-repo clone routing still open. Do not start the next feature until this feature's remaining scope is resolved.
 
 2026-10-02 integration: Spring Boot backend merged into main; `mvn test` on Java 17 passed 60 tests. This is a backend-only subset, not completion of the original Wave 0/1 exit gates. Waves remain planned full-acceptance targets. No original feature is newly marked Done.
 2026-10-02 live smoke check: indexed public `sindresorhus/is` through the REST endpoint (19 files seen, 5 parsed, 242 nodes, 487 edges); repeated request returned the same SQLite-cached snapshot. Full live acceptance remains open.

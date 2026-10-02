@@ -33,7 +33,11 @@ public final class IndexRepositoryService {
         Objects.requireNonNull(ref, "repository reference");
         String commit = fetcher.resolveCommit(ref);
         return snapshots.find(ref.coordinate(), commit).orElseGet(() -> {
-            RepositorySnapshot fetched = fetcher.fetch(ref);
+            RepositorySnapshot fetched = fetcher.fetchResolved(ref, commit);
+            if (fetched == null || !Objects.equals(commit, fetched.commitSha())
+                    || !ref.coordinate().equals(fetched.repository())) {
+                throw new IllegalStateException("Fetched repository does not match the resolved commit");
+            }
             GraphSnapshot built = graphBuilder.build(fetched);
             snapshots.save(built);
             return built;

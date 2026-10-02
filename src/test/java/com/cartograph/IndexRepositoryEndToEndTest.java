@@ -95,11 +95,17 @@ class IndexRepositoryEndToEndTest {
 
         @Override
         public RepositorySnapshot fetch(RepositoryRef ref) {
+            return fetchResolved(ref, resolveCommit(ref));
+        }
+
+        @Override
+        public RepositorySnapshot fetchResolved(RepositoryRef ref, String sha) {
+            org.junit.jupiter.api.Assertions.assertEquals("fixture-commit-sha", sha);
             fetchCount.incrementAndGet();
             try {
                 String source = new String(new ClassPathResource("fixtures/simple-ts-repo/main.ts")
                         .getInputStream().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
-                return new RepositorySnapshot(ref.coordinate(), "fixture-commit-sha",
+                return new RepositorySnapshot(ref.coordinate(), sha,
                         List.of(new SourceFile("main.ts", source, "typescript")));
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
