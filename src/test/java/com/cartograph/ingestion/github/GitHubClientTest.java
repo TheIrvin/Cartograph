@@ -38,13 +38,14 @@ class GitHubClientTest {
             else if (path.endsWith("/commits/main")) respond(exchange, 200, "{\"sha\":\"abc123\"}", null);
             else if (path.endsWith("/git/trees/abc123")) respond(exchange, 200, "{\"truncated\":false,\"tree\":[]}", null);
             else if (path.endsWith("/contents/src/app.ts")) respond(exchange, 304, "", null);
-            else if (path.endsWith("/contents/src/etag.ts")) respond(exchange, 200, "{\"encoding\":\"base64\",\"content\":\"YQ==\"}", "\"content-v1\"");
+            else if (path.endsWith("/contents/src/etag.ts")) respond(exchange, 200, "{\"type\":\"file\",\"size\":1,\"encoding\":\"base64\",\"content\":\"YQ==\"}", "\"content-v1\"");
             else if (path.endsWith("/missing")) respond(exchange, 404, "{}", null);
             else if (path.endsWith("/forbidden")) respond(exchange, 403, "{}", null);
             else if (path.endsWith("/rate-403")) {
                 exchange.getResponseHeaders().set("X-RateLimit-Remaining", "0");
                 respond(exchange, 403, "{}", null);
             } else if (path.endsWith("/rate-429")) respond(exchange, 429, "{}", null);
+            else if (path.endsWith("/commits/release/2026")) respond(exchange, 200, "{\"sha\":\"abc123\"}", null);
             else respond(exchange, 200, "{}", null);
         });
         server.start();
