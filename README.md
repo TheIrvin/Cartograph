@@ -196,7 +196,7 @@ sequenceDiagram
     API-->>Developer: JSON response
 ```
 
-The F0.08 working-tree implementation additionally pins the cache-miss fetch to the already-resolved SHA. The committed-baseline diagram does not imply that this pending implementation has been released.
+The merged F0.08 resilience work additionally pins the cache-miss fetch to the already-resolved SHA.
 
 | Module | Role |
 |---|---|
