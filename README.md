@@ -34,6 +34,8 @@ AI assistants guess how your codebase connects — and they hallucinate call gra
 
 ## ⚡ Quickstart
 
+Upgrading an earlier checkout? Read the [identity migration note](docs/migrations/cartograph-identity.md) for renamed configuration keys and existing SQLite databases.
+
 **Prerequisites:** Java 17 and Maven. No database to install, no API key required (set `GITHUB_TOKEN` only if you hit GitHub rate limits).
 
 ```bash
@@ -83,15 +85,15 @@ mvn spring-boot:run
 
 | Key | Default | What it does |
 |---|---|---|
-| `tracemap.sqlite.path` | `./data/tracemap.db` | Where graph snapshots are persisted |
-| `tracemap.github.token` | — (env: `GITHUB_TOKEN`) | GitHub token; raises API rate limits |
-| `tracemap.github.max-files` | `10000` | Max files indexed per repository |
-| `tracemap.github.max-total-bytes` | `1073741824` (1 GiB) | Max total repository bytes |
-| `tracemap.github.max-file-bytes` | `10485760` (10 MiB) | Max single-file bytes |
-| `tracemap.github.max-response-bytes` | `33554432` (32 MiB) | Max GitHub API response bytes |
+| `cartograph.sqlite.path` | `./data/cartograph.db` | Where graph snapshots are persisted |
+| `cartograph.github.token` | — (env: `GITHUB_TOKEN`) | GitHub token; raises API rate limits |
+| `cartograph.github.max-files` | `10000` | Max files indexed per repository |
+| `cartograph.github.max-total-bytes` | `1073741824` (1 GiB) | Max total repository bytes |
+| `cartograph.github.max-file-bytes` | `10485760` (10 MiB) | Max single-file bytes |
+| `cartograph.github.max-response-bytes` | `33554432` (32 MiB) | Max GitHub API response bytes |
 | `server.port` | `8080` | HTTP port |
 
-Set properties via `src/main/resources/application.yml`, command line (`--tracemap.sqlite.path=…`), or environment variables.
+Set properties via `src/main/resources/application.yml`, command line (`--cartograph.sqlite.path=…`), or environment variables.
 </details>
 
 ## 📡 API
@@ -144,7 +146,7 @@ Cartograph is a hexagonal (ports & adapters) Spring Boot service — the core us
 | `persistence` | SQLite snapshot store + schema migrations |
 
 ```
-src/main/java/com/tracemap/
+src/main/java/com/cartograph/
 ├── api/            # REST adapter
 ├── application/    # use case + ports (pure domain)
 ├── ingestion/      # GitHub ingestion adapters + guardrails
@@ -155,7 +157,7 @@ src/main/java/com/tracemap/
 
 ## 🧭 Roadmap
 
-Development is organized into waves — each wave ends in a runnable demo. Detailed specs live in [`tracemap-execution-plan.md`](tracemap-execution-plan.md); per-feature status in [`tracemap-feature-tracker.csv`](tracemap-feature-tracker.csv).
+Development is organized into waves — each wave ends in a runnable demo. Detailed specs live in [`cartograph-execution-plan.md`](cartograph-execution-plan.md); per-feature status in [`cartograph-feature-tracker.csv`](cartograph-feature-tracker.csv).
 
 | Wave | Focus | Status |
 |---|---|---|
@@ -197,10 +199,10 @@ Not a coder? Star ⭐ the repo, try it on your favorite repository and [report w
 
 | If you want to know… | Read |
 |---|---|
-| Strategy, positioning, architecture decisions | [`tracemap-architecture-and-implementation-plan.md`](tracemap-architecture-and-implementation-plan.md) |
-| All 90+ features with acceptance criteria | [`tracemap-detailed-implementation-plan.md`](tracemap-detailed-implementation-plan.md) |
-| Wave sequencing and cut lines | [`tracemap-execution-plan.md`](tracemap-execution-plan.md) |
-| Machine-readable feature status | [`tracemap-feature-tracker.csv`](tracemap-feature-tracker.csv) |
+| Strategy, positioning, architecture decisions | [`cartograph-architecture-and-implementation-plan.md`](cartograph-architecture-and-implementation-plan.md) |
+| All 90+ features with acceptance criteria | [`cartograph-detailed-implementation-plan.md`](cartograph-detailed-implementation-plan.md) |
+| Wave sequencing and cut lines | [`cartograph-execution-plan.md`](cartograph-execution-plan.md) |
+| Machine-readable feature status | [`cartograph-feature-tracker.csv`](cartograph-feature-tracker.csv) |
 | Ground rules for AI coding agents | [`AGENTS.md`](AGENTS.md) |
 
 ## 📄 License

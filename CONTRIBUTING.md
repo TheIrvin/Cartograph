@@ -62,12 +62,12 @@ Cartograph is a **hexagonal (ports & adapters)** service. To keep it that way:
 - [ ] Hexagonal boundaries respected (no framework imports inside `application`)
 - [ ] Error responses use the stable `{ code, message }` contract
 - [ ] Docs updated if you added config, endpoints, or behavior
-- [ ] If you completed a feature's **full acceptance criteria**, update `tracemap-feature-tracker.csv` (status + wave) in the same PR
+- [ ] If you completed a feature's **full acceptance criteria**, update `cartograph-feature-tracker.csv` (status + wave) in the same PR
 - [ ] PR description explains *what* and *why*, not just *how*
 
 ## 🏷️ How the tracker works
 
-[`tracemap-feature-tracker.csv`](tracemap-feature-tracker.csv) is the source of truth — 90+ features with permanent IDs (`F{phase}.{nn}`), priorities, dependencies, and waves. Issues reference these IDs. If your PR fully completes a feature card's acceptance criteria, flip its status; partial work stays 🟡 In Progress.
+[`cartograph-feature-tracker.csv`](cartograph-feature-tracker.csv) is the source of truth — 90+ features with permanent IDs (`F{phase}.{nn}`), priorities, dependencies, and waves. Issues reference these IDs. If your PR fully completes a feature card's acceptance criteria, flip its status; partial work stays 🟡 In Progress.
 
 | Symbol | Meaning |
 |---|---|
