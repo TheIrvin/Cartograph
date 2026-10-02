@@ -1,0 +1,53 @@
+package com.tracemap.api;
+
+import com.tracemap.ingestion.RepositoryLimitException;
+import com.tracemap.ingestion.InvalidRepositoryUrlException;
+import com.tracemap.ingestion.github.GitHubFetchException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+
+import java.util.UUID;
+
+@RestControllerAdvice
+public final class ApiExceptionHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(ApiExceptionHandler.class);
+
+    @ExceptionHandler({InvalidRepositoryUrlException.class, MethodArgumentNotValidException.class,
+            HttpMessageNotReadableException.class})
+    ResponseEntity<ApiErrorResponse> badRequest(Exception ignored) {
+        return response(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "The repository URL is invalid.");
+    }
+
+    @ExceptionHandler(RepositoryLimitException.class)
+    ResponseEntity<ApiErrorResponse> limit(RepositoryLimitException ignored) {
+        return response(HttpStatus.PAYLOAD_TOO_LARGE, "REPOSITORY_LIMIT_EXCEEDED", "Repository exceeds indexing limits.");
+    }
+
+    @ExceptionHandler(GitHubFetchException.class)
+    ResponseEntity<ApiErrorResponse> github(GitHubFetchException exception) {
+        HttpStatus status = switch (exception.kind()) {
+            case NOT_FOUND -> HttpStatus.NOT_FOUND;
+            case FORBIDDEN -> HttpStatus.FORBIDDEN;
+            case RATE_LIMITED -> HttpStatus.TOO_MANY_REQUESTS;
+            case NOT_MODIFIED, UPSTREAM -> HttpStatus.BAD_GATEWAY;
+        };
+        return response(status, "UPSTREAM_GITHUB_ERROR", "Unable to access the GitHub repository.");
+    }
+
+    @ExceptionHandler(Exception.class)
+    ResponseEntity<ApiErrorResponse> internal(Exception exception) {
+        String correlationId = UUID.randomUUID().toString();
+        LOG.error("Unhandled indexing failure correlationId={}", correlationId, exception);
+        return response(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "An internal error occurred.");
+    }
+
+    private ResponseEntity<ApiErrorResponse> response(HttpStatus status, String code, String message) {
+        return ResponseEntity.status(status).body(new ApiErrorResponse(code, message));
+    }
+}
