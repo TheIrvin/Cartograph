@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Cartograph · request & cache flow",
+    "output": "docs/diagrams/cartograph-cache-flow.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/pacman-cli/Cartograph.git",
+      "revision": "a51a4eb51365422f95d3433c50edf350820a4d28"
+    }
+  },
+  "components": [
+    {"id":"rest","type":"backend","label":"Index API","sublabel":"POST /api/v1/index","pos":[40,240],"size":[160,76],"sources":[{"path":"src/main/java/com/cartograph/api/IndexController.java","line":11,"end_line":21}]},
+    {"id":"service","type":"backend","label":"Index service","sublabel":"Cache-first orchestration","pos":[370,240],"size":[180,76],"sources":[{"path":"src/main/java/com/cartograph/application/IndexRepositoryService.java","line":28,"end_line":41}]},
+    {"id":"build","type":"backend","label":"Graph builder","sublabel":"Stable IDs + warnings","pos":[720,240],"size":[170,76],"sources":[{"path":"src/main/java/com/cartograph/graph/GraphBuilder.java","line":12,"end_line":28}]},
+    {"id":"store","type":"database","label":"SQLite snapshots","sublabel":"Repository + commit key","pos":[370,40],"size":[180,76],"sources":[{"path":"src/main/java/com/cartograph/persistence/sqlite/SQLiteGraphSnapshotRepository.java","line":46,"end_line":90}]},
+    {"id":"fetch","type":"backend","label":"GitHub ingestion","sublabel":"Ref resolution + limits","pos":[370,470],"size":[180,76],"sources":[{"path":"src/main/java/com/cartograph/ingestion/github/GitHubRepositoryFetcher.java","line":27,"end_line":59}]},
+    {"id":"github","type":"external","label":"GitHub REST API","sublabel":"Tree + supported content","pos":[40,470],"size":[180,76],"sources":[{"path":"src/main/java/com/cartograph/ingestion/github/GitHubClient.java","line":33,"end_line":49}]},
+    {"id":"parser","type":"backend","label":"tree-sitter parser","sublabel":"JavaScript + TypeScript","pos":[720,470],"size":[170,76],"sources":[{"path":"src/main/java/com/cartograph/parsing/javascript/JavaScriptTypeScriptParser.java"},{"path":"src/main/java/com/cartograph/graph/GraphBuilder.java","line":12,"end_line":14}]}
+  ],
+  "connections": [
+    {"id":"index","from":"rest","to":"service","label":"index","variant":"emphasis"},
+    {"id":"cache","from":"service","to":"store","label":"lookup / save"},
+    {"id":"fetch-miss","from":"service","to":"fetch","label":"resolve; miss: fetch"},
+    {"id":"upstream","from":"fetch","to":"github","label":"HTTPS"},
+    {"id":"build-miss","from":"service","to":"build","label":"miss: build","variant":"emphasis"},
+    {"id":"parse","from":"build","to":"parser","label":"parse files"}
+  ],
+  "cards": [
+    {"dot":"cyan","title":"One application","items":["Components are modules in a single Spring Boot process, not deployed microservices.","The API returns graph JSON; a browser graph viewer is planned."]},
+    {"dot":"emerald","title":"Cache behavior","items":["Resolve the requested ref before checking SQLite.","A stored snapshot bypasses source downloads and parsing.","On a miss, fetch supported sources, build the graph, then persist it."]},
+    {"dot":"amber","title":"Evidence boundary","items":["Sources are pinned to commit a51a4eb.","Includes the committed F0.08 resilience work: retries, timeouts, ETag reuse, SHA-pinned fetches.","Static analysis has incomplete coverage; consult returned warnings."]}
+  ]
+}
