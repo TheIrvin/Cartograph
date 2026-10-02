@@ -1,0 +1,98 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cartograph hexagonal architecture — live: client request flows through the REST adapter and application core, which drives GitHub ingestion, tree-sitter parsing, and SQLite persistence through ports">
+  <defs>
+    <linearGradient id="bgA" x1="0" y1="0" x2="0" y2="700" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#0E1830"/>
+    </linearGradient>
+    <linearGradient id="accentA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#818CF8"/>
+    </linearGradient>
+    <marker id="arwA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#64748B"/>
+    </marker>
+    <marker id="arwAT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#2DD4BF"/>
+    </marker>
+    <style>
+      @keyframes sigA { from { stroke-dashoffset: 390; } to { stroke-dashoffset: 0; } }
+      @keyframes marchA { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -24; } }
+      @keyframes corePulseA { 0%, 100% { opacity: 0.10; } 50% { opacity: 0.30; } }
+      .signalA { animation: sigA 2.8s linear infinite; }
+      .flowA { stroke-dasharray: 6 12; animation: marchA 1s linear infinite; }
+      .coreGlowA { animation: corePulseA 2.6s ease-in-out infinite; }
+      @media (prefers-reduced-motion: reduce) { .signalA, .flowA, .coreGlowA { animation: none; } }
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" fill="url(#bgA)"/>
+
+  <!-- runtime boundary -->
+  <rect x="270" y="140" width="780" height="360" rx="14" fill="#101B33" opacity="0.55" stroke="#CA9D3B" stroke-dasharray="8 6"/>
+  <text x="292" y="170" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#E3C56D">Cartograph service — Spring Boot runtime</text>
+
+  <!-- edges -->
+  <polyline points="170,242 310,242 500,242 560,242" stroke="#2DD4BF" stroke-width="2.2" fill="none" marker-end="url(#arwAT)"/>
+  <text x="240" y="230" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#8AA0C4">POST /api/v1/index</text>
+  <text x="525" y="230" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#8AA0C4">invoke</text>
+
+  <polyline class="flowA" points="580,282 580,330 430,330 430,400" stroke="#818CF8" stroke-width="1.8" stroke-dasharray="6 12" fill="none" marker-end="url(#arwA)"/>
+  <text x="505" y="322" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#A5B4FC">«RepositoryFetcher»</text>
+  <line class="flowA" x1="675" y1="282" x2="675" y2="400" stroke="#818CF8" stroke-width="1.8" stroke-dasharray="6 12" marker-end="url(#arwA)"/>
+  <text x="687" y="345" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#A5B4FC">«SourceParser»</text>
+  <polyline class="flowA" points="790,242 920,242 920,400" stroke="#818CF8" stroke-width="1.8" stroke-dasharray="6 12" fill="none" marker-end="url(#arwA)"/>
+  <text x="932" y="315" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#A5B4FC">«GraphSnapshotRepository»</text>
+
+  <line x1="330" y1="436" x2="240" y2="436" stroke="#64748B" stroke-width="1.6" marker-end="url(#arwA)"/>
+  <text x="285" y="424" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#7E8DA8">HTTPS</text>
+  <line class="flowA" x1="920" y1="472" x2="920" y2="540" stroke="#64748B" stroke-width="1.6" marker-end="url(#arwA)"/>
+  <text x="932" y="510" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#7E8DA8">JDBC</text>
+
+  <!-- traveling request signal -->
+  <polyline class="signalA" points="170,242 560,242" stroke="#B7FBF0" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-dasharray="26 364"/>
+
+  <!-- nodes -->
+  <rect x="30" y="210" width="140" height="64" rx="10" fill="#111C30" stroke="#475569" stroke-width="1.8"/>
+  <text x="100" y="238" text-anchor="middle" font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#E9EFF9">Client</text>
+  <text x="100" y="258" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#7E8DA8">curl · browser · CI</text>
+
+  <rect x="310" y="210" width="190" height="64" rx="10" fill="#0F2A26" stroke="#2DD4BF" stroke-width="1.8"/>
+  <text x="405" y="238" text-anchor="middle" font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#E9EFF9">IndexController</text>
+  <text x="405" y="258" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5EEAD4">REST adapter · /api/v1</text>
+
+  <rect class="coreGlowA" x="552" y="194" width="246" height="96" rx="12" fill="#2DD4BF" opacity="0.10"/>
+  <rect x="560" y="202" width="230" height="80" rx="10" fill="#0F2A26" stroke="url(#accentA)" stroke-width="2.2"/>
+  <text x="675" y="232" text-anchor="middle" font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14.5" font-weight="700" fill="#E9EFF9">IndexRepositoryService</text>
+  <text x="675" y="254" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#94A3B8">application core — indexing use case</text>
+
+  <rect x="60" y="400" width="180" height="72" rx="10" fill="#111C30" stroke="#475569" stroke-width="1.8"/>
+  <text x="150" y="428" text-anchor="middle" font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#E9EFF9">GitHub REST API</text>
+  <text x="150" y="450" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#7E8DA8">external · optional token</text>
+
+  <rect x="330" y="400" width="200" height="72" rx="10" fill="#0F2A26" stroke="#2DD4BF" stroke-width="1.8"/>
+  <text x="430" y="428" text-anchor="middle" font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#E9EFF9">GitHubRepositoryFetcher</text>
+  <text x="430" y="450" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5EEAD4">ingestion.github adapter</text>
+
+  <rect x="560" y="400" width="200" height="72" rx="10" fill="#0F2A26" stroke="#2DD4BF" stroke-width="1.8"/>
+  <text x="660" y="428" text-anchor="middle" font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#E9EFF9">JavaScriptTypeScriptParser</text>
+  <text x="660" y="450" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5EEAD4">parsing.javascript adapter</text>
+
+  <rect x="810" y="400" width="220" height="72" rx="10" fill="#0F2A26" stroke="#2DD4BF" stroke-width="1.8"/>
+  <text x="920" y="428" text-anchor="middle" font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="700" fill="#E9EFF9">SQLiteGraphSnapshotRepository</text>
+  <text x="920" y="450" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#5EEAD4">persistence.sqlite adapter</text>
+
+  <rect x="810" y="540" width="220" height="64" rx="10" fill="#1E1B3A" stroke="#A5B4FC" stroke-width="1.8"/>
+  <text x="920" y="566" text-anchor="middle" font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#E9EFF9">SQLite file</text>
+  <text x="920" y="588" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#A5B4FC">jdbc:sqlite · cartograph.db</text>
+
+  <!-- legend + note -->
+  <g font-family="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#94A3B8">
+    <rect x="50" y="622" width="26" height="16" rx="5" fill="#0F2A26" stroke="#2DD4BF"/>
+    <text x="84" y="635">Backend 5</text>
+    <rect x="180" y="622" width="26" height="16" rx="5" fill="#1E1B3A" stroke="#A5B4FC"/>
+    <text x="214" y="635">Database 1</text>
+    <rect x="316" y="622" width="26" height="16" rx="5" fill="#111C30" stroke="#475569"/>
+    <text x="350" y="635">External 2</text>
+  </g>
+  <text x="600" y="635" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#4E639B">live render · interactive: docs/diagrams/cartograph-architecture.html</text>
+</svg>
