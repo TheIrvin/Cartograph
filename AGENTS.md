@@ -4,7 +4,7 @@
 
 - This repository contains an offline-tested backend walking skeleton on `main`, not the full Wave 1 viewer or completed Wave 0 deployment/CI gates.
 - The current implementation override is Java 17 + Maven + Spring Boot 3.5.6 (the earlier TypeScript/Next.js architecture remains planning context, not the active scaffold).
-- The application entry point is `com.tracemap.TraceMapApplication`; the offline test suite runs with `mvn test`.
+- The application entry point is `com.cartograph.CartographApplication`; the offline test suite runs with `mvn test`.
 
 ## Verified local commands
 
@@ -17,13 +17,13 @@ mvn spring-boot:run
 mvn test
 ```
 
-The HTTP endpoint is `POST /api/v1/index` with a JSON `repositoryUrl`. SQLite persists snapshots at `./data/tracemap.db` by default; set `tracemap.sqlite.path` to override it.
+The HTTP endpoint is `POST /api/v1/index` with a JSON `repositoryUrl`. SQLite persists snapshots at `./data/cartograph.db` by default; set `cartograph.sqlite.path` to override it.
 
 ## Source of truth
 
 - Start with `README.md`; it links the strategy, feature plan, execution plan, and tracker in intended reading order.
-- `tracemap-feature-tracker.csv` is the machine-readable status/dependency/wave source of truth. Feature IDs are permanent (`F{phase}.{nn}`); update status and wave there first, then keep the feature-plan card and changelog consistent.
-- Use `tracemap-execution-plan.md` for current sequencing and cut lines. Each wave must end in a runnable demo; do not silently reduce a P0 acceptance criterion.
+- `cartograph-feature-tracker.csv` is the machine-readable status/dependency/wave source of truth. Feature IDs are permanent (`F{phase}.{nn}`); update status and wave there first, then keep the feature-plan card and changelog consistent.
+- Use `cartograph-execution-plan.md` for current sequencing and cut lines. Each wave must end in a runnable demo; do not silently reduce a P0 acceptance criterion.
 - The architecture document's original FastAPI/Python table and its TypeScript amendment are planning references; the active walking-skeleton implementation uses the Spring Boot override above.
 
 ## Planned boundaries

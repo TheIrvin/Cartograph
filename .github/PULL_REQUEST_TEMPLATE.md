@@ -12,4 +12,4 @@
 - [ ] Tests added/updated for the change
 - [ ] Hexagonal boundaries respected (no framework imports inside `application`)
 - [ ] Error responses keep the stable `{ code, message }` contract
-- [ ] Docs + `tracemap-feature-tracker.csv` updated if a feature's acceptance criteria are now fully met
+- [ ] Docs + `cartograph-feature-tracker.csv` updated if a feature's acceptance criteria are now fully met
