@@ -13,7 +13,8 @@
 
 ## Status snapshot (2026-10-02)
 
-- **Stage:** Wave 1 walking skeleton scaffold is verified with Java 17, Maven, Spring Boot, MockMvc, the TypeScript parser, graph builder, and SQLite persistence.
+- **Stage:** Backend walking skeleton merged into `main`; Java 17 test suite passes 60 tests. This does not complete the original Wave 0/1 gates: no viewer, CI, deployment, or live GitHub end-to-end verification yet.
+- **Tracker:** 17 features are In Progress and 73 Not Started. Partial backend implementations do not satisfy the full feature cards; planned completion waves are unchanged.
 - **Current endpoint:** `POST /api/v1/index` accepts `{ "repositoryUrl": "https://github.com/<owner>/<repo>" }` and returns the graph snapshot, commit SHA, warnings, and metrics.
 - **Database:** SQLite defaults to `./data/tracemap.db`; override with `tracemap.sqlite.path`.
 

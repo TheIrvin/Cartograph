@@ -2,7 +2,7 @@
 
 ## Repository status
 
-- This repository contains the verified Wave 1 TraceMap walking skeleton.
+- This repository contains an offline-tested backend walking skeleton on `main`, not the full Wave 1 viewer or completed Wave 0 deployment/CI gates.
 - The current implementation override is Java 17 + Maven + Spring Boot 3.5.6 (the earlier TypeScript/Next.js architecture remains planning context, not the active scaffold).
 - The application entry point is `com.tracemap.TraceMapApplication`; the offline test suite runs with `mvn test`.
 

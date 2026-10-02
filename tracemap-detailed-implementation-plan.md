@@ -61,30 +61,30 @@ A machine-readable copy lives in [`tracemap-feature-tracker.csv`](./tracemap-fea
 
 | ID | Feature | Epic | P | Effort | Depends on | Status |
 |---|---|---|---|---|---|---|
-| F0.01 | Monorepo scaffold & tooling | 0.1 Foundation | P0 | S | — | ⬜ |
-| F0.02 | Shared types & API contracts | 0.1 Foundation | P0 | S | F0.01 | ⬜ |
+| F0.01 | Monorepo scaffold & tooling | 0.1 Foundation | P0 | S | — | 🟡 |
+| F0.02 | Shared types & API contracts | 0.1 Foundation | P0 | S | F0.01 | 🟡 |
 | F0.03 | CI pipeline | 0.1 Foundation | P0 | S | F0.01 | ⬜ |
 | F0.04 | Deploy pipeline & environments | 0.1 Foundation | P0 | S | F0.01 | ⬜ |
-| F0.05 | Secrets & config management | 0.1 Foundation | P0 | S | F0.01 | ⬜ |
+| F0.05 | Secrets & config management | 0.1 Foundation | P0 | S | F0.01 | 🟡 |
 | F0.06 | Error tracking & product analytics | 0.1 Foundation | P1 | S | F0.04 | ⬜ |
-| F0.07 | URL input & validation | 0.2 Ingestion | P0 | S | F0.02 | ⬜ |
-| F0.08 | GitHub API client | 0.2 Ingestion | P0 | M | F0.02 | ⬜ |
+| F0.07 | URL input & validation | 0.2 Ingestion | P0 | S | F0.02 | 🟡 |
+| F0.08 | GitHub API client | 0.2 Ingestion | P0 | M | F0.02 | 🟡 |
 | F0.09 | Shallow-clone fallback | 0.2 Ingestion | P0 | M | F0.08 | ⬜ |
-| F0.10 | Repo guardrails & size caps | 0.2 Ingestion | P0 | S | F0.08 | ⬜ |
-| F0.11 | Language detection | 0.2 Ingestion | P0 | S | F0.08 | ⬜ |
+| F0.10 | Repo guardrails & size caps | 0.2 Ingestion | P0 | S | F0.08 | 🟡 |
+| F0.11 | Language detection | 0.2 Ingestion | P0 | S | F0.08 | 🟡 |
 | F0.12 | Async indexing jobs & queue | 0.2 Ingestion | P0 | L | F0.08 | ⬜ |
 | F0.13 | Indexing progress UI | 0.2 Ingestion | P0 | M | F0.12 | ⬜ |
-| F0.14 | Friendly error states | 0.2 Ingestion | P0 | S | F0.10, F0.12 | ⬜ |
-| F0.15 | tree-sitter runtime integration | 0.3 Parsing & Graph | P0 | M | F0.01 | ⬜ |
-| F0.16 | TypeScript/JavaScript extractor | 0.3 Parsing & Graph | P0 | L | F0.15 | ⬜ |
+| F0.14 | Friendly error states | 0.2 Ingestion | P0 | S | F0.10, F0.12 | 🟡 |
+| F0.15 | tree-sitter runtime integration | 0.3 Parsing & Graph | P0 | M | F0.01 | 🟡 |
+| F0.16 | TypeScript/JavaScript extractor | 0.3 Parsing & Graph | P0 | L | F0.15 | 🟡 |
 | F0.17 | Python extractor | 0.3 Parsing & Graph | P0 | L | F0.15 | ⬜ |
-| F0.18 | Symbol & module resolution | 0.3 Parsing & Graph | P0 | L | F0.16, F0.17 | ⬜ |
-| F0.19 | Edge extraction | 0.3 Parsing & Graph | P0 | M | F0.18 | ⬜ |
-| F0.20 | Confidence scoring | 0.3 Parsing & Graph | P0 | M | F0.19 | ⬜ |
+| F0.18 | Symbol & module resolution | 0.3 Parsing & Graph | P0 | L | F0.16, F0.17 | 🟡 |
+| F0.19 | Edge extraction | 0.3 Parsing & Graph | P0 | M | F0.18 | 🟡 |
+| F0.20 | Confidence scoring | 0.3 Parsing & Graph | P0 | M | F0.19 | 🟡 |
 | F0.21 | Web-framework route extraction | 0.3 Parsing & Graph | P1 | L | F0.18 | ⬜ |
-| F0.22 | Graph normalization & stable IDs | 0.3 Parsing & Graph | P0 | M | F0.19 | ⬜ |
-| F0.23 | SQLite graph store | 0.3 Parsing & Graph | P0 | M | F0.22 | ⬜ |
-| F0.24 | Golden-file parser test suite | 0.3 Parsing & Graph | P0 | M | F0.23 | ⬜ |
+| F0.22 | Graph normalization & stable IDs | 0.3 Parsing & Graph | P0 | M | F0.19 | 🟡 |
+| F0.23 | SQLite graph store | 0.3 Parsing & Graph | P0 | M | F0.22 | 🟡 |
+| F0.24 | Golden-file parser test suite | 0.3 Parsing & Graph | P0 | M | F0.23 | 🟡 |
 | F0.25 | React Flow canvas shell | 0.4 Diagram Viewer | P0 | S | F0.02 | ⬜ |
 | F0.26 | Auto-layout engine | 0.4 Diagram Viewer | P0 | M | F0.25 | ⬜ |
 | F0.27 | Node design system | 0.4 Diagram Viewer | P0 | M | F0.25 | ⬜ |
@@ -108,7 +108,7 @@ A machine-readable copy lives in [`tracemap-feature-tracker.csv`](./tracemap-fea
 | F0.45 | Grounded-answer contract | 0.6 Ask / Chat | P0 | M | F0.42 | ⬜ |
 | F0.46 | Prompt-injection & abuse hardening | 0.6 Ask / Chat | P0 | M | F0.42 | ⬜ |
 | F0.47 | LLM cost controls | 0.6 Ask / Chat | P0 | M | F0.44 | ⬜ |
-| F0.48 | Commit-SHA cache layer | 0.7 Cache & Hygiene | P0 | M | F0.23 | ⬜ |
+| F0.48 | Commit-SHA cache layer | 0.7 Cache & Hygiene | P0 | M | F0.23 | 🟡 |
 | F0.49 | Popular-repo pre-warm | 0.7 Cache & Hygiene | P2 | S | F0.48 | ⬜ |
 | F0.50 | Rate limiting | 0.7 Cache & Hygiene | P0 | S | F0.04 | ⬜ |
 | F0.51 | Health checks & server metrics | 0.7 Cache & Hygiene | P1 | S | F0.04 | ⬜ |
@@ -180,6 +180,7 @@ A machine-readable copy lives in [`tracemap-feature-tracker.csv`](./tracemap-fea
 Everything else sits on this. Kept deliberately small — no infra beyond what a first-time visitor can see.
 
 #### F0.01 — Monorepo scaffold & tooling `P0 · S`
+**Status:** 🟡 — Java 17/Maven backend scaffold merged; planned multi-app tooling and frontend remain unbuilt. Spring Boot override applies to this slice.
 **Story:** As a developer on this project, I want a ready monorepo so every feature lands in the right place from day one.
 **Sub-tasks:** pnpm workspaces with `apps/web` (Next.js + TS + Tailwind), `apps/api` (Node.js + TypeScript — route handlers + indexing worker; Strategy §7 amendment), `packages/parser`, `packages/graph`, `packages/context-assembler`, `packages/shared-types`; lint/format config; conventional-commit hook; `.editorconfig`; README skeleton.
 **Acceptance criteria:**
@@ -189,6 +190,7 @@ Everything else sits on this. Kept deliberately small — no infra beyond what a
 **Depends on:** — · **Notes:** Directory names are load-bearing — later features reference them.
 
 #### F0.02 — Shared types & API contracts `P0 · S`
+**Status:** 🟡 — Java domain records, ports, and validated REST DTOs exist; cross-client contracts and CI drift checks remain.
 **Story:** As a full-stack dev, I want one source of truth for API types so the API can't drift from the client.
 **Sub-tasks:** hand-authored TS types in `packages/shared-types` — single language after the 2026-10-01 stack consolidation, so no cross-language codegen layer; `Symbol`, `Edge`, `GraphSnapshot`, `IndexJob`, `ApiError` types; versioned API envelope (`{ data, meta }`); runtime validation at the API boundary (zod or equivalent).
 **Acceptance criteria:**
@@ -212,6 +214,7 @@ Everything else sits on this. Kept deliberately small — no infra beyond what a
 **Depends on:** F0.01.
 
 #### F0.05 — Secrets & config management `P0 · S`
+**Status:** 🟡 — Environment-backed GitHub token and example configuration exist; deployment secret management/scanning not verified.
 **Sub-tasks:** `.env.example` as the canonical config surface; secrets in Vercel/Fly dashboards only; config validation at boot (fail fast on missing var).
 **Acceptance criteria:**
 - [ ] Fresh clone + `.env.example` → app boots locally with no tribal knowledge.
@@ -228,6 +231,7 @@ Everything else sits on this. Kept deliberately small — no infra beyond what a
 ### Epic 0.2 — Repo Ingestion
 
 #### F0.07 — URL input & validation `P0 · S`
+**Status:** 🟡 — Backend normalization and rejection tests pass; homepage input and full feature fixtures remain.
 **Story:** As a visitor, I paste a GitHub URL and TraceMap accepts `github.com/owner/repo`, `/tree/branch`, `?tab=readme`-polluted URLs, and rejects everything else politely.
 **Sub-tasks:** URL parser → `{owner, repo, branch?, ref?}`; normalize GitHub UI variants; homepage input + `/owner/repo` route handling; inline validation errors.
 **Acceptance criteria:**
@@ -236,6 +240,7 @@ Everything else sits on this. Kept deliberately small — no infra beyond what a
 **Depends on:** F0.02.
 
 #### F0.08 — GitHub API client `P0 · M`
+**Status:** 🟡 — Bounded REST fetcher, ETag primitives, and error mapping tested offline; live indexing and retry/backoff remain unverified.
 **Story:** As the ingestion pipeline, I need a resilient GitHub REST client: repo metadata, recursive git tree, file contents, latest commit SHA.
 **Sub-tasks:** typed client with ETag conditional requests; rate-limit accounting (primary + secondary limits) with exponential backoff; optional `GITHUB_TOKEN` (server-side only) to raise limits; per-repo fetch plan (tree API for small repos, clone for big ones).
 **Acceptance criteria:**
@@ -251,6 +256,7 @@ Everything else sits on this. Kept deliberately small — no infra beyond what a
 **Depends on:** F0.08.
 
 #### F0.10 — Repo guardrails & size caps `P0 · S`
+**Status:** 🟡 — File/count/byte guards and HTTP 413 tested; full card acceptance has not been verified.
 **Story:** As an operator, I need hard free-tier caps so a monorepo can't blow up compute (Strategy §11, risk #1).
 **Sub-tasks:** limits in config: max files (start: 5,000), max repo blob size (start: 50 MB), max single-file size; binary/vendored dir skip-list (`node_modules`, `dist`, `.min.js`, lockfiles); pre-flight check before any heavy work.
 **Acceptance criteria:**
@@ -259,6 +265,7 @@ Everything else sits on this. Kept deliberately small — no infra beyond what a
 **Depends on:** F0.08.
 
 #### F0.11 — Language detection `P0 · S`
+**Status:** 🟡 — JS/TS extension selection and unsupported-file warnings exist; broader detection remains.
 **Sub-tasks:** extension → language map; manifest sniffing (`package.json`, `tsconfig.json`, `requirements.txt`, `pyproject.toml`, `Pipfile`); emits ordered `language_set` per repo (drives which extractors run and forms part of cache keys, F0.48).
 **Acceptance criteria:**
 - [ ] Mixed TS+Python repo detected as both; extractor list matches.
@@ -283,6 +290,7 @@ Everything else sits on this. Kept deliberately small — no infra beyond what a
 **Depends on:** F0.12.
 
 #### F0.14 — Friendly error states `P0 · S`
+**Status:** 🟡 — Structured HTTP errors implemented; designed UI states and retry affordances remain.
 **Story:** Every failure mode has a designed page: repo not found · private · too large · rate-limited · unsupported language · internal error — each with a next-step suggestion.
 **Sub-tasks:** error taxonomy enum shared across API/UI (via F0.02); designed states with illustration-level polish; retry affordances where sensible.
 **Acceptance criteria:**
@@ -295,6 +303,7 @@ Everything else sits on this. Kept deliberately small — no infra beyond what a
 The moat (Strategy §2, §3). Every feature here serves "accurate, not hallucinated."
 
 #### F0.15 — tree-sitter runtime integration `P0 · M`
+**Status:** 🟡 — Native JS/TS grammars tested on Java 17; Python, throughput benchmark, and timeout acceptance remain.
 **Sub-tasks:** grammar loading for TS/JS + Python; native vs WASM decision documented; parse-error tolerance (never fail the whole repo on one broken file — collect per-file parse-error stats); per-file parse timeout; benchmark baseline (files/sec).
 **Acceptance criteria:**
 - [ ] File with syntax errors still yields partial symbols; repo-level indexing completes.
@@ -302,6 +311,7 @@ The moat (Strategy §2, §3). Every feature here serves "accurate, not hallucina
 **Depends on:** F0.01.
 
 #### F0.16 — TypeScript/JavaScript extractor `P0 · L`
+**Status:** 🟡 — AST definitions, imports/exports, and direct calls tested; arrows and broader constructs remain unsupported or unresolved.
 **Sub-tasks:** extract function declarations, arrow fns, class declarations, methods, object-literal methods; imports/exports/re-exports (`export * from`, barrel files, `export default`); call expressions incl. `await`, chained calls (`a.b().c()`), `new` expressions; dynamic `import()` (flagged low-confidence); tagged-template + JSX component references (P1 sub-task).
 **Acceptance criteria:**
 - [ ] Fixture file with ≥ 30 constructs produces a hand-verified symbol/edge list (100% match).
@@ -316,6 +326,7 @@ The moat (Strategy §2, §3). Every feature here serves "accurate, not hallucina
 **Depends on:** F0.15.
 
 #### F0.18 — Symbol & module resolution `P0 · L`
+**Status:** 🟡 — Same-file lexical scope resolution exists; cross-file aliases/barrels and repo-wide resolution remain.
 **Story:** Turn per-file AST facts into a repo-wide symbol table: which import refers to which real definition.
 **Sub-tasks:** module-path resolution (TS path aliases via `tsconfig.json` `paths`, JS `main`/`exports` fields; Python package layout with `__init__.py`); alias/import-rename tracking; export-following through barrels; same-name disambiguation (prefer same-package, then same-repo; else unresolved); unresolved calls counted, not faked.
 **Acceptance criteria:**
@@ -325,6 +336,7 @@ The moat (Strategy §2, §3). Every feature here serves "accurate, not hallucina
 **Depends on:** F0.16, F0.17. **Notes:** This is the hardest feature in Phase 0 — schedule it early, protect it.
 
 #### F0.19 — Edge extraction `P0 · M`
+**Status:** 🟡 — Basic calls/imports with locations round-trip through SQLite; full edge-kind and multi-callsite acceptance remain.
 **Sub-tasks:** typed edges per Strategy §5: `calls`, `imports`, `extends`, `implements`, `instantiates`, `handles_route`; dedup at (from, to, kind); edge provenance (file + line of the call site) stored in `meta` for deep-linking.
 **Acceptance criteria:**
 - [ ] Every edge kind produced by at least one fixture; round-trips through the store.
@@ -332,6 +344,7 @@ The moat (Strategy §2, §3). Every feature here serves "accurate, not hallucina
 **Depends on:** F0.18.
 
 #### F0.20 — Confidence scoring `P0 · M`
+**Status:** 🟡 — Proven edges carry confidence; full scoring rules, unresolved-ratio statistics, and UI remain.
 **Story:** The honesty feature — every edge carries a confidence, and the UI renders solid vs dashed accordingly (Strategy §5).
 **Sub-tasks:** scoring rules (full table in §6.3): direct static = 1.00; cross-file resolved import = 0.95; barrel re-export = 0.85; dynamic `import()`/`importlib` with literal = 0.60; duck-typed/`getattr`/`any`-typed = 0.40; threshold constant `DASHED_BELOW = 0.50` defined in exactly one place; per-repo unresolved-ratio stat.
 **Acceptance criteria:**
@@ -348,6 +361,7 @@ The moat (Strategy §2, §3). Every feature here serves "accurate, not hallucina
 **Depends on:** F0.18. **Notes:** Feeds Trace Mode entry points (F1.01); P1 because the graph ships without it, but Trace Mode is weak without it.
 
 #### F0.22 — Graph normalization & stable IDs `P0 · M`
+**Status:** 🟡 — Deterministic SHA-256 IDs include snapshot and source location under the Spring spec; full multi-language and golden acceptance remain.
 **Sub-tasks:** stable deterministic symbol IDs: `sha1(owner/repo/sha/relative_path/qualified_name)` (stable across re-indexes of the same commit); orphan policy (keep, flagged); self-loop policy (keep, render differently); multi-language graph merge; graph-level stats (node/edge counts by kind, unresolved ratio).
 **Acceptance criteria:**
 - [ ] Re-indexing the same SHA produces a byte-identical graph JSON (golden test).
@@ -355,6 +369,7 @@ The moat (Strategy §2, §3). Every feature here serves "accurate, not hallucina
 **Depends on:** F0.19.
 
 #### F0.23 — SQLite graph store `P0 · M`
+**Status:** 🟡 — Transactional snapshot storage and reads tested in one SQLite database; planned per-snapshot files/blob storage and 2k-file benchmark remain.
 **Sub-tasks:** schema per §6.1 (column-level spec below); per-(repo, sha) snapshot DB file; writer/reader API in `packages/graph`; snapshots pushed to blob storage; reader loads snapshot by key.
 **Acceptance criteria:**
 - [ ] Snapshot for a 2k-file repo loads into the reader in < 500ms.
@@ -362,6 +377,7 @@ The moat (Strategy §2, §3). Every feature here serves "accurate, not hallucina
 **Depends on:** F0.22.
 
 #### F0.24 — Golden-file parser test suite `P0 · M`
+**Status:** 🟡 — Small checked-in TS fixture and offline tests exist; real OSS golden corpus, precision/recall thresholds, and CI gate remain.
 **Story:** The accuracy gate. Curated sample repos with hand-verified expected graphs; CI fails if accuracy regresses — this is how "accurate, not hallucinated" stays true.
 **Sub-tasks:** 6–10 small real OSS repos (2–4 per language, incl. one with a web framework); expected-graph JSONs reviewed by hand; CI computes precision/recall vs thresholds (start: precision ≥ 0.95, recall ≥ 0.90 on calls; tune after first real-world run); accuracy dashboard numbers emitted per release.
 **Acceptance criteria:**
@@ -542,6 +558,7 @@ The moat (Strategy §2, §3). Every feature here serves "accurate, not hallucina
 ### Epic 0.7 — Caching & API Hygiene
 
 #### F0.48 — Commit-SHA cache layer `P0 · M`
+**Status:** 🟡 — SQLite repository+SHA reuse tested end-to-end; full cache-layer acceptance remains unverified.
 **Story:** Repeat visits to a popular repo are instant and free (Strategy §4 component 8).
 **Sub-tasks:** Redis/KV layer keyed `(repo, commit_sha, language_set)`; hit → serve snapshot pointer (no re-index); explicit re-index action (busts cache); stale-branch handling; cache-hit-rate metric.
 **Acceptance criteria:**
@@ -921,6 +938,26 @@ North-star funnel for Gate B/C: `diagram_viewed → trace_started` (target ≥ 4
 ## 9. Changelog
 
 Tracking log — append one line per status change (see §0.4).
+
+2026-10-02 integration: Spring Boot backend merged into main; `mvn test` on Java 17 passed 60 tests. This is a backend-only subset, not completion of the original Wave 0/1 exit gates. Waves remain planned full-acceptance targets. No original feature is newly marked Done.
+
+- 2026-10-02 · F0.01 ⬜→🟡 · Maven/Spring backend scaffold only.
+- 2026-10-02 · F0.02 ⬜→🟡 · Java domain/API contracts only.
+- 2026-10-02 · F0.05 ⬜→🟡 · Local environment configuration only.
+- 2026-10-02 · F0.07 ⬜→🟡 · Backend URL validation only.
+- 2026-10-02 · F0.08 ⬜→🟡 · Offline-tested GitHub adapter.
+- 2026-10-02 · F0.10 ⬜→🟡 · Bounded fetch/size guards.
+- 2026-10-02 · F0.11 ⬜→🟡 · JS/TS extension selection.
+- 2026-10-02 · F0.14 ⬜→🟡 · HTTP errors, no UI.
+- 2026-10-02 · F0.15 ⬜→🟡 · JS/TS native runtime only.
+- 2026-10-02 · F0.16 ⬜→🟡 · Limited AST extraction.
+- 2026-10-02 · F0.18 ⬜→🟡 · Same-file scope resolution only.
+- 2026-10-02 · F0.19 ⬜→🟡 · Basic located edges only.
+- 2026-10-02 · F0.20 ⬜→🟡 · Proven-edge confidence only.
+- 2026-10-02 · F0.22 ⬜→🟡 · Snapshot-scoped deterministic IDs.
+- 2026-10-02 · F0.23 ⬜→🟡 · SQLite adapter, no scale benchmark.
+- 2026-10-02 · F0.24 ⬜→🟡 · Small fixture, no OSS accuracy gate.
+- 2026-10-02 · F0.48 ⬜→🟡 · SQLite SHA reuse only.
 
 ```
 2026-09-27 · doc created · v1.0 · 90 features tracked (52 / 11 / 14 / 13 across Phases 0–3)

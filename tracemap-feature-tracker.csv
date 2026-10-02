@@ -1,28 +1,28 @@
 id,feature,epic,phase,priority,effort,depends_on,status,wave
-F0.01,Monorepo scaffold & tooling,0.1 Foundation,0 - MVP,P0,S,,Not Started,W0
-F0.02,Shared types & API contracts,0.1 Foundation,0 - MVP,P0,S,F0.01,Not Started,W0
+F0.01,Monorepo scaffold & tooling,0.1 Foundation,0 - MVP,P0,S,,In Progress,W0
+F0.02,Shared types & API contracts,0.1 Foundation,0 - MVP,P0,S,F0.01,In Progress,W0
 F0.03,CI pipeline,0.1 Foundation,0 - MVP,P0,S,F0.01,Not Started,W0
 F0.04,Deploy pipeline & environments,0.1 Foundation,0 - MVP,P0,S,F0.01,Not Started,W0
-F0.05,Secrets & config management,0.1 Foundation,0 - MVP,P0,S,F0.01,Not Started,W0
+F0.05,Secrets & config management,0.1 Foundation,0 - MVP,P0,S,F0.01,In Progress,W0
 F0.06,Error tracking & product analytics,0.1 Foundation,0 - MVP,P1,S,F0.04,Not Started,W8
-F0.07,URL input & validation,0.2 Repo Ingestion,0 - MVP,P0,S,F0.02,Not Started,W1
-F0.08,GitHub API client,0.2 Repo Ingestion,0 - MVP,P0,M,F0.02,Not Started,W2
+F0.07,URL input & validation,0.2 Repo Ingestion,0 - MVP,P0,S,F0.02,In Progress,W1
+F0.08,GitHub API client,0.2 Repo Ingestion,0 - MVP,P0,M,F0.02,In Progress,W2
 F0.09,Shallow-clone fallback,0.2 Repo Ingestion,0 - MVP,P0,M,F0.08,Not Started,W8
-F0.10,Repo guardrails & size caps,0.2 Repo Ingestion,0 - MVP,P0,S,F0.08,Not Started,W1
-F0.11,Language detection,0.2 Repo Ingestion,0 - MVP,P0,S,F0.08,Not Started,W1
+F0.10,Repo guardrails & size caps,0.2 Repo Ingestion,0 - MVP,P0,S,F0.08,In Progress,W1
+F0.11,Language detection,0.2 Repo Ingestion,0 - MVP,P0,S,F0.08,In Progress,W1
 F0.12,Async indexing jobs & queue,0.2 Repo Ingestion,0 - MVP,P0,L,F0.08,Not Started,W4
 F0.13,Indexing progress UI,0.2 Repo Ingestion,0 - MVP,P0,M,F0.12,Not Started,W4
-F0.14,Friendly error states,0.2 Repo Ingestion,0 - MVP,P0,S,"F0.10, F0.12",Not Started,W4
-F0.15,tree-sitter runtime integration,0.3 Parsing & Graph,0 - MVP,P0,M,F0.01,Not Started,W2
-F0.16,TypeScript/JavaScript extractor,0.3 Parsing & Graph,0 - MVP,P0,L,F0.15,Not Started,W2
+F0.14,Friendly error states,0.2 Repo Ingestion,0 - MVP,P0,S,"F0.10, F0.12",In Progress,W4
+F0.15,tree-sitter runtime integration,0.3 Parsing & Graph,0 - MVP,P0,M,F0.01,In Progress,W2
+F0.16,TypeScript/JavaScript extractor,0.3 Parsing & Graph,0 - MVP,P0,L,F0.15,In Progress,W2
 F0.17,Python extractor,0.3 Parsing & Graph,0 - MVP,P0,L,F0.15,Not Started,W3
-F0.18,Symbol & module resolution,0.3 Parsing & Graph,0 - MVP,P0,L,"F0.16, F0.17",Not Started,W3
-F0.19,Edge extraction,0.3 Parsing & Graph,0 - MVP,P0,M,F0.18,Not Started,W2
-F0.20,Confidence scoring,0.3 Parsing & Graph,0 - MVP,P0,M,F0.19,Not Started,W3
+F0.18,Symbol & module resolution,0.3 Parsing & Graph,0 - MVP,P0,L,"F0.16, F0.17",In Progress,W3
+F0.19,Edge extraction,0.3 Parsing & Graph,0 - MVP,P0,M,F0.18,In Progress,W2
+F0.20,Confidence scoring,0.3 Parsing & Graph,0 - MVP,P0,M,F0.19,In Progress,W3
 F0.21,Web-framework route extraction,0.3 Parsing & Graph,0 - MVP,P1,L,F0.18,Not Started,W9
-F0.22,Graph normalization & stable IDs,0.3 Parsing & Graph,0 - MVP,P0,M,F0.19,Not Started,W2
-F0.23,SQLite graph store,0.3 Parsing & Graph,0 - MVP,P0,M,F0.22,Not Started,W2
-F0.24,Golden-file parser test suite,0.3 Parsing & Graph,0 - MVP,P0,M,F0.23,Not Started,W2
+F0.22,Graph normalization & stable IDs,0.3 Parsing & Graph,0 - MVP,P0,M,F0.19,In Progress,W2
+F0.23,SQLite graph store,0.3 Parsing & Graph,0 - MVP,P0,M,F0.22,In Progress,W2
+F0.24,Golden-file parser test suite,0.3 Parsing & Graph,0 - MVP,P0,M,F0.23,In Progress,W2
 F0.25,React Flow canvas shell,0.4 Diagram Viewer,0 - MVP,P0,S,F0.02,Not Started,W4
 F0.26,Auto-layout engine,0.4 Diagram Viewer,0 - MVP,P0,M,F0.25,Not Started,W4
 F0.27,Node design system,0.4 Diagram Viewer,0 - MVP,P0,M,F0.25,Not Started,W4
@@ -46,7 +46,7 @@ F0.44,Chat UI (streaming),0.6 Ask / Chat,0 - MVP,P0,M,F0.42,Not Started,W7
 F0.45,Grounded-answer contract,0.6 Ask / Chat,0 - MVP,P0,M,F0.42,Not Started,W7
 F0.46,Prompt-injection & abuse hardening,0.6 Ask / Chat,0 - MVP,P0,M,F0.42,Not Started,W8
 F0.47,LLM cost controls,0.6 Ask / Chat,0 - MVP,P0,M,F0.44,Not Started,W8
-F0.48,Commit-SHA cache layer,0.7 Caching & API Hygiene,0 - MVP,P0,M,F0.23,Not Started,W5
+F0.48,Commit-SHA cache layer,0.7 Caching & API Hygiene,0 - MVP,P0,M,F0.23,In Progress,W5
 F0.49,Popular-repo pre-warm,0.7 Caching & API Hygiene,0 - MVP,P2,S,F0.48,Not Started,W8
 F0.50,Rate limiting,0.7 Caching & API Hygiene,0 - MVP,P0,S,F0.04,Not Started,W5
 F0.51,Health checks & server metrics,0.7 Caching & API Hygiene,0 - MVP,P1,S,F0.04,Not Started,W8
