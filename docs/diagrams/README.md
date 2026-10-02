@@ -11,8 +11,12 @@ and pinned to a commit so every source reference stays verifiable.
 | Behavior — request & cache flow | [cartograph-cache-flow.html](cartograph-cache-flow.html) | [cartograph-cache-flow.json](cartograph-cache-flow.json) | `docs/assets/architecture-explorer.png` |
 
 Download an HTML file and open it in a browser: the self-contained viewer
-supports pan/zoom, light/dark themes, source-linked evidence badges, and image
-export. GitHub displays HTML as source rather than executing it.
+supports pan/zoom, light/dark themes, source-linked evidence badges, image
+export, and the opt-in `trace` animation (`meta.animation: "trace"` in each
+spec) that plays relationship flow through the diagram. GitHub displays HTML
+as source rather than executing it. The README's own banner and pipeline SVGs
+are separately hand-animated with CSS keyframes (no scripts), so they animate
+inline on GitHub while honoring `prefers-reduced-motion`.
 
 ## Scope and evidence
 
