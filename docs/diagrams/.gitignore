@@ -1,0 +1,6 @@
+# Generated local evidence contains workstation-specific paths.
+*.delivery.json
+*.finalize.json
+*.finalize-summary.json
+*.browser-check.json
+*.delivery-pending.json
