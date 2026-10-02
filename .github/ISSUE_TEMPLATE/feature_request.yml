@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         Cartograph's roadmap is tracked feature-by-feature in
-        [`tracemap-feature-tracker.csv`](https://github.com/pacman-cli/Cartograph/blob/main/tracemap-feature-tracker.csv).
+        [`cartograph-feature-tracker.csv`](https://github.com/pacman-cli/Cartograph/blob/main/cartograph-feature-tracker.csv).
         Before proposing something new, check whether it's already on the roadmap —
         if it is, comment on the linked issue or start a discussion instead.
         For bigger ideas, [start a discussion](https://github.com/pacman-cli/Cartograph/discussions) first.
