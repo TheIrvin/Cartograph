@@ -43,8 +43,8 @@ class IndexControllerTest {
     }
 
     @Test
-    void mapsUnavailableActuatorHealthToStructuredNotFound() throws Exception {
-        mvc.perform(get("/actuator/health"))
+    void mapsUnknownActuatorRouteToStructuredNotFound() throws Exception {
+        mvc.perform(get("/actuator/nope"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("""
