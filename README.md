@@ -13,7 +13,7 @@
 
 ## Status snapshot (2026-10-02)
 
-- **Stage:** Backend walking skeleton merged into `main`; Java 17 test suite passes 60 tests. This does not complete the original Wave 0/1 gates: no viewer, CI, deployment, or live GitHub end-to-end verification yet.
+- **Stage:** Backend walking skeleton merged into `main`; Java 17 test suite passes 63 tests. This does not complete the original Wave 0/1 gates: no viewer, CI, or deployment yet. One public-repository live smoke check has passed; broader live acceptance remains open.
 - **Live smoke check (2026-10-02):** `sindresorhus/is` indexed successfully through `POST /api/v1/index` with 19 files seen, 5 parsed, 242 nodes, and 487 edges; a repeated request returned the same SQLite-cached snapshot.
 - **Tracker:** 17 features are In Progress and 73 Not Started. Partial backend implementations do not satisfy the full feature cards; planned completion waves are unchanged.
 - **Current endpoint:** `POST /api/v1/index` accepts `{ "repositoryUrl": "https://github.com/<owner>/<repo>" }` and returns the graph snapshot, commit SHA, warnings, and metrics.
@@ -53,6 +53,7 @@ Errors use a stable `{ "code": "...", "message": "..." }` body. Current mappings
 |---|---|---|
 | 400 | `INVALID_REQUEST` | Invalid JSON, blank URL, or invalid GitHub URL |
 | 413 | `REPOSITORY_LIMIT_EXCEEDED` | Repository exceeds configured file/count/byte limits |
+| 404 | `NOT_FOUND` | Unknown local route; `/actuator/health` is not configured |
 | 404 | `UPSTREAM_GITHUB_ERROR` | GitHub repository or resource was not found |
 | 403 | `UPSTREAM_GITHUB_ERROR` | GitHub denied access |
 | 429 | `UPSTREAM_GITHUB_ERROR` | GitHub rate limit was exceeded |

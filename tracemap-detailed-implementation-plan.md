@@ -240,7 +240,7 @@ Everything else sits on this. Kept deliberately small — no infra beyond what a
 **Depends on:** F0.02.
 
 #### F0.08 — GitHub API client `P0 · M`
-**Status:** 🟡 — Bounded REST fetcher, ETag primitives, and error mapping tested offline; live indexing and retry/backoff remain unverified.
+**Status:** 🟡 — Bounded REST fetcher, ETag primitives, and error mapping tested offline; one live public-repository indexing smoke check passed. Broader live acceptance and retry/backoff remain unverified.
 **Story:** As the ingestion pipeline, I need a resilient GitHub REST client: repo metadata, recursive git tree, file contents, latest commit SHA.
 **Sub-tasks:** typed client with ETag conditional requests; rate-limit accounting (primary + secondary limits) with exponential backoff; optional `GITHUB_TOKEN` (server-side only) to raise limits; per-repo fetch plan (tree API for small repos, clone for big ones).
 **Acceptance criteria:**

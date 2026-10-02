@@ -11,6 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.UUID;
 
@@ -38,6 +40,11 @@ public final class ApiExceptionHandler {
             case NOT_MODIFIED, UPSTREAM -> HttpStatus.BAD_GATEWAY;
         };
         return response(status, "UPSTREAM_GITHUB_ERROR", "Unable to access the GitHub repository.");
+    }
+
+    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
+    ResponseEntity<ApiErrorResponse> notFound(Exception ignored) {
+        return response(HttpStatus.NOT_FOUND, "NOT_FOUND", "The requested resource was not found.");
     }
 
     @ExceptionHandler(Exception.class)

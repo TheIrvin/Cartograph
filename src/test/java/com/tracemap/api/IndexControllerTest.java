@@ -19,8 +19,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @WebMvcTest(controllers = IndexController.class)
 @ContextConfiguration(classes = {IndexController.class, ApiExceptionHandler.class})
@@ -28,6 +30,43 @@ class IndexControllerTest {
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper mapper;
     @MockBean IndexRepositoryService service;
+
+    @Test
+    void mapsUnknownRouteToStructuredNotFound() throws Exception {
+        mvc.perform(get("/unknown-route"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("""
+                        {"code":"NOT_FOUND","message":"The requested resource was not found."}
+                        """));
+        verifyNoInteractions(service);
+    }
+
+    @Test
+    void mapsUnavailableActuatorHealthToStructuredNotFound() throws Exception {
+        mvc.perform(get("/actuator/health"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("""
+                        {"code":"NOT_FOUND","message":"The requested resource was not found."}
+                        """));
+        verifyNoInteractions(service);
+    }
+
+    @Test
+    void mapsMissingHandlerToStructuredNotFound() throws Exception {
+        MockMvc withoutResourceHandlers = standaloneSetup(new IndexController(service))
+                .setControllerAdvice(new ApiExceptionHandler())
+                .build();
+
+        withoutResourceHandlers.perform(get("/unknown-route"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("""
+                        {"code":"NOT_FOUND","message":"The requested resource was not found."}
+                        """));
+        verifyNoInteractions(service);
+    }
 
     @Test
     void indexesRepositoryWithoutCallingGitHub() throws Exception {
@@ -68,7 +107,8 @@ class IndexControllerTest {
         mvc.perform(post("/api/v1/index").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"repositoryUrl\":\"https://github.com/acme/widgets\"}"))
                 .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.code").value("INTERNAL_ERROR"));
+                .andExpect(jsonPath("$.code").value("INTERNAL_ERROR"))
+                .andExpect(jsonPath("$.message").value("An internal error occurred."));
     }
 
     @Test
