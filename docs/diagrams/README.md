@@ -7,8 +7,13 @@ and pinned to a commit so every source reference stays verifiable.
 
 | View | Interactive HTML | Editable spec | Embedded in README as |
 |---|---|---|---|
-| Structure — ports & adapters | [cartograph-architecture.html](cartograph-architecture.html) | [cartograph-architecture.json](cartograph-architecture.json) | `docs/assets/architecture.png` |
-| Behavior — request & cache flow | [cartograph-cache-flow.html](cartograph-cache-flow.html) | [cartograph-cache-flow.json](cartograph-cache-flow.json) | `docs/assets/architecture-explorer.png` |
+| Structure — ports & adapters | [cartograph-architecture.html](cartograph-architecture.html) | [cartograph-architecture.json](cartograph-architecture.json) | `docs/assets/architecture-live.svg` (animated) |
+| Behavior — request & cache flow | [cartograph-cache-flow.html](cartograph-cache-flow.html) | [cartograph-cache-flow.json](cartograph-cache-flow.json) | `docs/assets/cache-flow-live.svg` (animated) |
+
+The README embeds are hand-authored animated SVG renditions of these two
+diagrams (CSS keyframes only, no scripts, `prefers-reduced-motion` aware), kept
+in visual sync with the specs above. If you change a spec's topology or
+labels, update the matching `-live.svg` in the same PR.
 
 Download an HTML file and open it in a browser: the self-contained viewer
 supports pan/zoom, light/dark themes, source-linked evidence badges, image
@@ -54,8 +59,7 @@ evidence on every rerun.
 
 The generated receipts report schema, delivery, artifact, and real-browser
 checks. They are local build evidence, not hand-authored documentation.
-Automated checks passed for both versions, and the dark 2048-wide browser
-captures were visually inspected for legible labels, complete nodes, and
-non-overlapping routes. Use the viewer's export menu to create fresh images
-after opening the HTML locally, and keep the JSON specification with any
-revised HTML so contributors can reproduce it.
+Automated checks passed for both versions: containment, readability, and
+theme checks, with non-overlapping routes. Use the viewer's export menu to
+create fresh images after opening the HTML locally, and keep the JSON
+specification with any revised HTML so contributors can reproduce it.

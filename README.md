@@ -147,15 +147,26 @@ Every error uses a stable `{ "code": "...", "message": "..." }` body:
 
 Cartograph uses ports and adapters inside one Spring Boot application. `IndexRepositoryService` orchestrates fetching, cache lookup, graph building, and persistence through small interfaces. It is registered with Spring's `@Service`; the graph model and builder are separate from HTTP and database adapters.
 
-**Structure — ports & adapters**
+**Structure — ports & adapters** *(animated)*
 
-<img src="docs/assets/architecture.png" alt="Cartograph hexagonal architecture: Index API calls the application core, which drives GitHub ingestion, tree-sitter parsing, and SQLite persistence through ports." width="100%"/>
+<img src="docs/assets/architecture-live.svg" alt="Live Cartograph hexagonal architecture: the client request flows through the REST adapter into the application core, which drives GitHub ingestion, tree-sitter parsing, and SQLite persistence through dashed port edges." width="100%"/>
 
-**Behavior — request & cache flow**
+**Behavior — request & cache flow** *(animated)*
 
-<img src="docs/assets/architecture-explorer.png" alt="Cartograph request flow: cache-first service resolves the ref, serves stored snapshots, and on a miss fetches sources, parses them with tree-sitter, and persists the graph." width="100%"/>
+<img src="docs/assets/cache-flow-live.svg" alt="Live Cartograph request flow: the cache-first service serves stored SQLite snapshots on a hit; on a miss it fetches sources, parses them with tree-sitter, and persists the graph." width="100%"/>
 
-**Explore both as source-linked interactive diagrams**: [hexagonal structure](docs/diagrams/cartograph-architecture.html) · [request & cache flow](docs/diagrams/cartograph-cache-flow.html) — download the HTML and open it locally for pan/zoom, light/dark themes, source references, and image export. GitHub displays HTML as source rather than running it. The [diagram guide](docs/diagrams/README.md) records the pinned baselines and regeneration commands.
+Both diagrams animate inline (pure CSS, no scripts, honors `prefers-reduced-motion`). **Explore the source-linked interactive versions**: [hexagonal structure](docs/diagrams/cartograph-architecture.html) · [request & cache flow](docs/diagrams/cartograph-cache-flow.html) — download the HTML and open it locally for pan/zoom, light/dark themes, source references, trace animation, and image export. GitHub displays HTML as source rather than running it. The [diagram guide](docs/diagrams/README.md) records the pinned baselines and regeneration commands.
+
+### Why SQLite, not Postgres?
+
+Deliberate decision, full reasoning in [ADR 0001](docs/decisions/0001-sqlite-over-postgres.md). The short version:
+
+- **The workload is snapshot-cache shaped** — write a graph once per `(repository, commitSha)`, read it back whole. No concurrent writers, joins, or analytical queries; exactly what SQLite is best at.
+- **Embedded storage is part of the product story** — zero-install quickstart, offline `mvn test`, one-command demo. Postgres would tax all three before there's a user to justify it.
+- **The planned store evolution is a graph DB** (`F2.07 Neo4j migration` at Gate C+), not Postgres — an unplanned SQLite → Postgres → Neo4j sequence is two migrations for no current benefit.
+- **The swap stays cheap when it's justified.** Persistence sits behind the `GraphSnapshotRepository` port: Postgres is one new adapter plus Flyway migrations (native in flyway-core), zero core changes.
+
+**Revisit triggers** (any one flips this decision): multiple API instances or async indexing jobs (F0.12) needing shared state · server-side graph/recursive path queries for the trace engine (Wave 9+) · pgvector for the "Ask" feature (F0.43) · managed HA/backup requirements. Until then: SQLite, on purpose.
 
 ### Request lifecycle
 
