@@ -1,0 +1,44 @@
+name: ✨ Feature request / idea
+description: Suggest a capability or improvement for Cartograph.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Cartograph's roadmap is tracked feature-by-feature in
+        [`tracemap-feature-tracker.csv`](https://github.com/pacman-cli/Cartograph/blob/main/tracemap-feature-tracker.csv).
+        Before proposing something new, check whether it's already on the roadmap —
+        if it is, comment on the linked issue or start a discussion instead.
+        For bigger ideas, [start a discussion](https://github.com/pacman-cli/Cartograph/discussions) first.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What are you trying to do, and what's missing?
+      placeholder: When indexing a monorepo, I can't see which language contributed which nodes…
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What would you like to happen? Keep it concrete.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you've thought about.
+    validations:
+      required: false
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This fits v1 (URL → fetch → parse → resolve → snapshot → graph)
+        - label: This belongs to a later phase (auth, multi-repo, IDE, SaaS) — happy to discuss behind the gates
+        - label: I checked the feature tracker and did not find this on the roadmap
+    validations:
+      required: true

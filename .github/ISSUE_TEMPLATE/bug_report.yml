@@ -1,0 +1,53 @@
+name: 🐛 Bug report
+description: Something broke while indexing or running Cartograph — tell us what.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug! Real-repository failures are
+        the most valuable kind — they harden the guardrails for everyone.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+      placeholder: A clear and concise description.
+    validations:
+      required: true
+  - type: textarea
+    id: repo-url
+    attributes:
+      label: Repository URL & request
+      description: The repository that failed and the exact request you made.
+      placeholder: |
+        curl -X POST http://localhost:8080/api/v1/index \
+          -H 'Content-Type: application/json' \
+          -d '{"repositoryUrl":"https://github.com/owner/repo"}'
+    validations:
+      required: true
+  - type: textarea
+    id: response
+    attributes:
+      label: Response / error body
+      description: Paste the `{ code, message }` response or relevant log output.
+      placeholder: '{"code":"UPSTREAM_GITHUB_ERROR","message":"…"}'
+    validations:
+      required: false
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: Which commit of Cartograph are you running?
+      options:
+        - Latest main
+        - Older commit / fork
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: Java version, OS, GITHUB_TOKEN set or not, logs, screenshots.
+    validations:
+      required: false

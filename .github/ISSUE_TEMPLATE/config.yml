@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & ideas
+    url: https://github.com/pacman-cli/Cartograph/discussions
+    about: Ask how Cartograph works, propose directions, or share what you built with it.
+  - name: 📖 Contributing guide
+    url: https://github.com/pacman-cli/Cartograph/blob/main/CONTRIBUTING.md
+    about: Development setup, conventions, and how to pick up an issue.
