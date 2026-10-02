@@ -14,6 +14,7 @@
 ## Status snapshot (2026-10-02)
 
 - **Stage:** Backend walking skeleton merged into `main`; Java 17 test suite passes 60 tests. This does not complete the original Wave 0/1 gates: no viewer, CI, deployment, or live GitHub end-to-end verification yet.
+- **Live smoke check (2026-10-02):** `sindresorhus/is` indexed successfully through `POST /api/v1/index` with 19 files seen, 5 parsed, 242 nodes, and 487 edges; a repeated request returned the same SQLite-cached snapshot.
 - **Tracker:** 17 features are In Progress and 73 Not Started. Partial backend implementations do not satisfy the full feature cards; planned completion waves are unchanged.
 - **Current endpoint:** `POST /api/v1/index` accepts `{ "repositoryUrl": "https://github.com/<owner>/<repo>" }` and returns the graph snapshot, commit SHA, warnings, and metrics.
 - **Database:** SQLite defaults to `./data/tracemap.db`; override with `tracemap.sqlite.path`.

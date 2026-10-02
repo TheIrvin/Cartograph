@@ -940,6 +940,7 @@ North-star funnel for Gate B/C: `diagram_viewed → trace_started` (target ≥ 4
 Tracking log — append one line per status change (see §0.4).
 
 2026-10-02 integration: Spring Boot backend merged into main; `mvn test` on Java 17 passed 60 tests. This is a backend-only subset, not completion of the original Wave 0/1 exit gates. Waves remain planned full-acceptance targets. No original feature is newly marked Done.
+2026-10-02 live smoke check: indexed public `sindresorhus/is` through the REST endpoint (19 files seen, 5 parsed, 242 nodes, 487 edges); repeated request returned the same SQLite-cached snapshot. Full live acceptance remains open.
 
 - 2026-10-02 · F0.01 ⬜→🟡 · Maven/Spring backend scaffold only.
 - 2026-10-02 · F0.02 ⬜→🟡 · Java domain/API contracts only.
