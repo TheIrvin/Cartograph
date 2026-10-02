@@ -2,7 +2,7 @@
 
 <img src="docs/assets/banner.svg" alt="Cartograph — paste a GitHub URL, get the real map of your codebase" width="100%"/>
 
-**Real call graphs for any repository — accurate, not hallucinated.**
+**Turn source code into a map you can inspect.**
 Paste a GitHub URL, get an AST-derived map of how the code actually connects.
 
 [![CI](https://github.com/pacman-cli/Cartograph/actions/workflows/ci.yml/badge.svg)](https://github.com/pacman-cli/Cartograph/actions/workflows/ci.yml)
@@ -22,21 +22,19 @@ Paste a GitHub URL, get an AST-derived map of how the code actually connects.
 
 ## 🗺️ Why Cartograph?
 
-AI assistants guess how your codebase connects — and they hallucinate call graphs that look right but aren't. Cartograph doesn't guess. It **fetches your repository, parses it with [tree-sitter](https://tree-sitter.github.io/tree-sitter/), and builds a real graph** from the source: every node and edge traceable to actual code.
+Understanding an unfamiliar repository should start with the source. Cartograph **fetches a GitHub repository, parses it with [tree-sitter](https://tree-sitter.github.io/tree-sitter/), and builds a graph** of extracted symbols and relationships. Warnings expose unsupported files and incomplete analysis. Static analysis is deliberately limited: dynamic dispatch and unresolved references are not guarantees about runtime behavior.
 
 - **Paste a URL, get a map.** One `POST /api/v1/index` call turns `github.com/owner/repo` into a structured graph snapshot.
 - **AST-accurate, not LLM-hallucinated.** Symbols, call sites, and edges are extracted by deterministic parsers, with warnings when coverage is incomplete.
 - **Snapshots, not re-fetches.** Results are persisted in SQLite, keyed by commit SHA — the same commit returns the same cached graph.
-- **Guardrails built in.** Repository size caps, stable error contracts, retry with response caching — so a 10k-file monorepo can't take the service down.
+- **Bounded ingestion.** File-count, content-byte, and response-size limits reject oversized inputs; retries and timeouts bound individual upstream operations.
 - **An honest, open roadmap.** 90+ planned features tracked wave by wave in public. We're at the beginning — perfect time to join.
 
 > **Status:** backend walking skeleton on `main` — 63 tests green, and the first live index of a public repository already works (`sindresorhus/is` → 242 nodes, 487 edges). In flight: GitHub client resilience — bounded retries, timeouts, ETag reuse, SHA-pinned fetches (feature F0.08). The graph viewer UI and async jobs are the next waves. See [Roadmap](#-roadmap).
 
 ## ⚡ Quickstart
 
-Upgrading an earlier checkout? Read the [identity migration note](docs/migrations/cartograph-identity.md) for renamed configuration keys and existing SQLite databases.
-
-**Prerequisites:** Java 17 and Maven. No database to install, no API key required (set `GITHUB_TOKEN` only if you hit GitHub rate limits).
+**Prerequisites:** Java 17 and Maven. SQLite is embedded. Public-repository requests can run without a token; an optional server-side `GITHUB_TOKEN` provides authenticated GitHub access. Initial Maven dependency downloads and live indexing require internet access.
 
 ```bash
 # 1. Clone and start the API
@@ -46,25 +44,28 @@ mvn spring-boot:run
 ```
 
 ```bash
-# 2. Index any public GitHub repository
+# 2. Try a public repository containing supported JavaScript/TypeScript files
 curl -X POST http://localhost:8080/api/v1/index \
   -H 'Content-Type: application/json' \
   -d '{"repositoryUrl":"https://github.com/sindresorhus/is"}'
 ```
 
-```jsonc
-// 3. Get back a graph snapshot
+Illustrative response shape (empty graph shown; live counts and SHAs vary):
+
+```json
 {
-  "repository": "github.com/sindresorhus/is",
-  "commitSha": "e1f4a2b…",
-  "nodes": [ { "id": "…", "kind": "FUNCTION", "location": { } }, "… 242 total" ],
-  "edges": [ "… 487 call edges" ],
-  "warnings": [ "… files skipped or partially parsed" ],
-  "metrics": { "filesSeen": 19, "filesParsed": 5, "nodes": 242, "edges": 487 }
+  "repository": "owner/repo",
+  "commitSha": "0123456789abcdef0123456789abcdef01234567",
+  "nodes": [],
+  "edges": [],
+  "warnings": [],
+  "metrics": { "filesSeen": 0, "filesParsed": 0, "nodes": 0, "edges": 0 }
 }
 ```
 
-Run the full offline test suite (no network needed):
+Nodes carry `stableId`, `kind`, `name`, `filePath`, and line/column ranges. Edges carry `fromId`, `toId`, `kind`, `confidence`, and `location`. See the [response DTO](src/main/java/com/cartograph/api/GraphSnapshotResponse.java) and [graph models](src/main/java/com/cartograph/graph/model).
+
+Run the offline test suite (no GitHub access or token needed once Maven dependencies are installed):
 
 ```bash
 mvn test
@@ -87,16 +88,28 @@ mvn spring-boot:run
 |---|---|---|
 | `cartograph.sqlite.path` | `./data/cartograph.db` | Where graph snapshots are persisted |
 | `cartograph.github.token` | — (env: `GITHUB_TOKEN`) | GitHub token; raises API rate limits |
-| `cartograph.github.max-files` | `10000` | Max files indexed per repository |
-| `cartograph.github.max-total-bytes` | `1073741824` (1 GiB) | Max total repository bytes |
+| `cartograph.github.max-files` | `10000` | Max supported candidate files |
+| `cartograph.github.max-total-bytes` | `1073741824` (1 GiB) | Max supported-file content bytes |
 | `cartograph.github.max-file-bytes` | `10485760` (10 MiB) | Max single-file bytes |
 | `cartograph.github.max-response-bytes` | `33554432` (32 MiB) | Max GitHub API response bytes |
 | `server.port` | `8080` | HTTP port |
 
 Set properties via `src/main/resources/application.yml`, command line (`--cartograph.sqlite.path=…`), or environment variables.
+
+For Maven, pass application arguments as follows:
+
+```bash
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081 --cartograph.sqlite.path=./data/demo.db"
+```
+
+`.env.example` documents the token name; Spring Boot does not automatically load a `.env` file. Export variables in your shell or configure your IDE environment. Keep tokens out of issue reports and screenshots.
 </details>
 
 ## 📡 API
+
+### `GET /actuator/health`
+
+Liveness probe — returns `{"status":"UP"}` while the service is running.
 
 ### `POST /api/v1/index`
 
@@ -123,7 +136,7 @@ Every error uses a stable `{ "code": "...", "message": "..." }` body:
 
 <img src="docs/assets/pipeline.svg" alt="Indexing pipeline: URL in → fetch → parse → resolve → snapshot → graph out" width="100%"/>
 
-1. **URL in** — the GitHub URL is validated and normalized (`owner/repo` only in v1; branches and subpaths are rejected).
+1. **URL in** — accept `https://github.com/owner/repo` or `/tree/{ref}` URLs. Everything after `/tree/` is interpreted as the ref, including slashes; it is not a subdirectory selector.
 2. **Fetch** — the repository tree and sources are pulled from the GitHub API inside hard size caps, with retry and response caching.
 3. **Parse** — tree-sitter walks each JS/TS/TSX file into an AST.
 4. **Resolve** — symbols and call sites are extracted and normalized into stable node IDs.
@@ -132,9 +145,47 @@ Every error uses a stable `{ "code": "...", "message": "..." }` body:
 
 ## 🏗️ Architecture
 
-Cartograph is a hexagonal (ports & adapters) Spring Boot service — the core use case has zero framework knowledge; everything is an adapter behind a port.
+Cartograph uses ports and adapters inside one Spring Boot application. `IndexRepositoryService` orchestrates fetching, cache lookup, graph building, and persistence through small interfaces. It is registered with Spring's `@Service`; the graph model and builder are separate from HTTP and database adapters.
 
-<img src="docs/assets/architecture.svg" alt="Cartograph hexagonal architecture" width="100%"/>
+**Structure — ports & adapters**
+
+<img src="docs/assets/architecture.png" alt="Cartograph hexagonal architecture: Index API calls the application core, which drives GitHub ingestion, tree-sitter parsing, and SQLite persistence through ports." width="100%"/>
+
+**Behavior — request & cache flow**
+
+<img src="docs/assets/architecture-explorer.png" alt="Cartograph request flow: cache-first service resolves the ref, serves stored snapshots, and on a miss fetches sources, parses them with tree-sitter, and persists the graph." width="100%"/>
+
+**Explore both as source-linked interactive diagrams**: [hexagonal structure](docs/diagrams/cartograph-architecture.html) · [request & cache flow](docs/diagrams/cartograph-cache-flow.html) — download the HTML and open it locally for pan/zoom, light/dark themes, source references, and image export. GitHub displays HTML as source rather than running it. The [diagram guide](docs/diagrams/README.md) records the pinned baselines and regeneration commands.
+
+### Request lifecycle
+
+```mermaid
+sequenceDiagram
+    actor Developer
+    participant API as Index API
+    participant Service as Index service
+    participant GitHub as GitHub adapter
+    participant DB as SQLite
+    participant Graph as Builder + parser
+    Developer->>API: POST /api/v1/index
+    API->>Service: Validated repository URL
+    Service->>GitHub: Resolve requested ref
+    GitHub-->>Service: Commit SHA
+    Service->>DB: Find repository + SHA
+    alt Snapshot exists
+        DB-->>Service: Stored graph
+    else Cache miss
+        Service->>GitHub: Fetch source files
+        GitHub-->>Service: Sources + warnings
+        Service->>Graph: Build graph snapshot
+        Graph-->>Service: Nodes, edges, metrics, warnings
+        Service->>DB: Save snapshot
+    end
+    Service-->>API: Graph snapshot
+    API-->>Developer: JSON response
+```
+
+The F0.08 working-tree implementation additionally pins the cache-miss fetch to the already-resolved SHA. The committed-baseline diagram does not imply that this pending implementation has been released.
 
 | Module | Role |
 |---|---|
@@ -143,16 +194,16 @@ Cartograph is a hexagonal (ports & adapters) Spring Boot service — the core us
 | `ingestion` | URL normalization, indexing guardrails, GitHub client (retry + cache) |
 | `parsing` | tree-sitter JS/TS/TSX extractor |
 | `graph` | Domain model (nodes, edges, metrics, warnings), `GraphBuilder`, stable IDs |
-| `persistence` | SQLite snapshot store + schema migrations |
+| `persistence` | SQLite snapshot store + schema initialization |
 
 ```
 src/main/java/com/cartograph/
 ├── api/            # REST adapter
-├── application/    # use case + ports (pure domain)
+├── application/    # orchestration + ports
 ├── ingestion/      # GitHub ingestion adapters + guardrails
 ├── parsing/        # tree-sitter language extractors
 ├── graph/          # domain model + graph builder
-└── persistence/    # SQLite adapter + migrations
+└── persistence/    # SQLite adapter + schema initialization
 ```
 
 ## 🧭 Roadmap
@@ -173,7 +224,7 @@ Development is organized into waves — each wave ends in a runnable demo. Detai
 
 ## 🤝 Contributing
 
-Contributions are **warmly welcome** — the roadmap is wave-by-wave and every wave contains `good first issue` sized work. Hacktoberfest participants: yes, we're participating! 🎃
+Contributions are **warmly welcome**. Pick a scoped issue, check its dependencies, and comment with your approach before starting larger changes.
 
 1. Browse [good first issues](https://github.com/pacman-cli/Cartograph/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or [`help wanted`](https://github.com/pacman-cli/Cartograph/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 2. Read [CONTRIBUTING.md](CONTRIBUTING.md) — env setup, branch & commit conventions, PR checklist
@@ -181,11 +232,26 @@ Contributions are **warmly welcome** — the roadmap is wave-by-wave and every w
 
 Not a coder? Star ⭐ the repo, try it on your favorite repository and [report what broke](https://github.com/pacman-cli/Cartograph/issues/new?template=bug_report.yml), or improve the docs.
 
+### Pick your first contribution
+
+| Area | Issue | Starting point |
+|---|---|---|
+| Java / Spring | [Health endpoint #2](https://github.com/pacman-cli/Cartograph/issues/2) | Small operational slice; check the issue's acceptance criteria |
+| Parser correctness | [Golden fixtures #5](https://github.com/pacman-cli/Cartograph/issues/5) | Add a tiny reproducible source fixture and expected graph |
+| Language support | [Language detection #4](https://github.com/pacman-cli/Cartograph/issues/4) | Expand ingestion coverage with offline tests |
+| Frontend | [Graph canvas #7](https://github.com/pacman-cli/Cartograph/issues/7) | Larger planned slice; agree the API and setup before coding |
+| Developer experience | [Local containers #3](https://github.com/pacman-cli/Cartograph/issues/3) | Reproducible startup and persisted SQLite data |
+| Configuration / tests | [Runtime configuration #11](https://github.com/pacman-cli/Cartograph/issues/11) | Document actual defaults and verify Spring binding; coordinate with F0.08 |
+
+The public name is **Cartograph**. Existing `com.cartograph` packages, `cartograph.*` properties, and planning filenames retain the original internal name; migration is tracked in [#1](https://github.com/pacman-cli/Cartograph/issues/1).
+
 ## 💙 Community
 
 - 💬 Questions & ideas → [Discussions](https://github.com/pacman-cli/Cartograph/discussions)
 - ⭐ If Cartograph looks useful, a star genuinely helps others find it
 - 📣 Building something with it? Open a discussion — we'll feature it
+
+Want to share Cartograph? Use the [launch kit](docs/launch-kit.md) for accurate short copy, a reproducible demo script, and contribution-focused sharing ideas.
 
 <a href="https://star-history.com/#pacman-cli/Cartograph&Date">
  <picture>

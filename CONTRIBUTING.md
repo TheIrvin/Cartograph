@@ -17,7 +17,7 @@ First off — **thank you**. Cartograph is built wave-by-wave in public, and eve
 **Requirements:** Java 17 (Temurin or Homebrew `openjdk@17`), Maven 3.8+. Node/pnpm/Python are *not* needed — the backend skeleton is pure JVM.
 
 ```bash
-git clone https://github.com/pacman-cli/<your-fork>.git
+git clone https://github.com/YOUR_USERNAME/Cartograph.git
 cd Cartograph
 
 # macOS with Homebrew OpenJDK
@@ -59,7 +59,7 @@ Cartograph is a **hexagonal (ports & adapters)** service. To keep it that way:
 
 - [ ] `mvn test` passes locally (CI runs it too — PRs must be green)
 - [ ] New code has tests; bug fixes include a regression test
-- [ ] Hexagonal boundaries respected (no framework imports inside `application`)
+- [ ] Ports remain free of HTTP/database implementation details; follow the existing Spring service registration pattern
 - [ ] Error responses use the stable `{ code, message }` contract
 - [ ] Docs updated if you added config, endpoints, or behavior
 - [ ] If you completed a feature's **full acceptance criteria**, update `cartograph-feature-tracker.csv` (status + wave) in the same PR
@@ -79,11 +79,11 @@ Cartograph is a **hexagonal (ports & adapters)** service. To keep it that way:
 
 ## 🎃 Hacktoberfest
 
-Issues labeled `good first issue` and `help wanted` count toward Hacktoberfest. Spam PRs (one-character edits, AI-generated drive-bys that don't build) will be marked `invalid` — please pick an issue and comment "I'd like to work on this" first so we can assign it to you.
+`good first issue` and `help wanted` are contributor-discovery labels, not guarantees of Hacktoberfest eligibility. Check the event's current rules and repository participation before relying on a PR for credit. Submit useful, tested changes; explain and verify any AI-assisted code as you would your own. Comment on an issue before starting so contributors can coordinate.
 
 ## 🔍 Review process
 
-- Maintainers aim to review PRs within **72 hours**.
+- Review timing depends on maintainer availability; include reproduction steps and test results to make review easier.
 - CI must be green; a maintainer will help if your PR has conflicts or failing tests.
 - Reviews may be iterative — that's normal, not rejection.
 

@@ -5,3 +5,6 @@
 target/
 data/
 .env
+
+# archify local build evidence
+.archify/
