@@ -100,6 +100,9 @@ mvn spring-boot:run
 | `cartograph.github.read-timeout-millis` | `15000` | HTTP read timeout (ms) |
 | `cartograph.github.cache-max-entries` | `256` | Max entries in the GitHub response cache |
 | `cartograph.github.cache-max-bytes` | `16777216` (16 MiB) | Max response-cache bytes |
+| `cartograph.ratelimit.enabled` | `true` | Per-client rate limiting on `POST /api/v1/index` |
+| `cartograph.ratelimit.capacity` | `30` | Burst capacity of the per-client token bucket |
+| `cartograph.ratelimit.refill-per-minute` | `60` | Tokens refilled per minute per client |
 | `server.port` | `8080` | HTTP port |
 
 Set properties via `src/main/resources/application.yml`, command line (`--cartograph.sqlite.path=…`), or environment variables (relaxed binding: `CARTOGRAPH_GITHUB_MAX_FILES=5000`).
@@ -137,6 +140,7 @@ Every error uses a stable `{ "code": "...", "message": "..." }` body:
 | 403 | `UPSTREAM_GITHUB_ERROR` | GitHub denied access |
 | 413 | `REPOSITORY_LIMIT_EXCEEDED` | Repository exceeds configured caps |
 | 429 | `UPSTREAM_GITHUB_ERROR` | GitHub rate limit hit (set `GITHUB_TOKEN`) |
+| 429 | `RATE_LIMIT_EXCEEDED` | Client exceeded the indexing rate limit (`Retry-After` header is set) |
 | 502 | `UPSTREAM_GITHUB_ERROR` | GitHub returned an unusable response |
 | 500 | `INTERNAL_ERROR` | Unexpected server failure |
 

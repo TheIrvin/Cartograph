@@ -36,3 +36,7 @@ cartograph:
     read-timeout-millis: 15000
     cache-max-entries: 256
     cache-max-bytes: 16777216
+  ratelimit:
+    enabled: true
+    capacity: 30
+    refill-per-minute: 60
