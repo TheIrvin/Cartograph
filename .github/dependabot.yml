@@ -4,7 +4,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    # Version PRs disabled: merged via the GitHub button they would be
+    # authored by dependabot[bot] and pollute the contributors graph.
+    # Dependency bumps are applied manually as maintainer-authored commits.
+    open-pull-requests-limit: 0
     ignore:
       # Spring Boot 4 is a deliberate migration, not a routine bump (pinned 3.5.x)
       - dependency-name: org.springframework.boot:spring-boot-starter-parent
@@ -17,4 +20,4 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
