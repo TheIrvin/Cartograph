@@ -88,13 +88,21 @@ mvn spring-boot:run
 |---|---|---|
 | `cartograph.sqlite.path` | `./data/cartograph.db` | Where graph snapshots are persisted |
 | `cartograph.github.token` | — (env: `GITHUB_TOKEN`) | GitHub token; raises API rate limits |
+| `cartograph.github.base-url` | `https://api.github.com` | GitHub API base URL (overridable for testing) |
 | `cartograph.github.max-files` | `10000` | Max supported candidate files |
 | `cartograph.github.max-total-bytes` | `1073741824` (1 GiB) | Max supported-file content bytes |
 | `cartograph.github.max-file-bytes` | `10485760` (10 MiB) | Max single-file bytes |
 | `cartograph.github.max-response-bytes` | `33554432` (32 MiB) | Max GitHub API response bytes |
+| `cartograph.github.max-attempts` | `3` | Bounded retry attempts per GitHub call |
+| `cartograph.github.retry-backoff-millis` | `250` | Base backoff between retries (ms) |
+| `cartograph.github.max-retry-sleep-millis` | `5000` | Ceiling for a single retry sleep (ms) |
+| `cartograph.github.connect-timeout-millis` | `5000` | HTTP connect timeout (ms) |
+| `cartograph.github.read-timeout-millis` | `15000` | HTTP read timeout (ms) |
+| `cartograph.github.cache-max-entries` | `256` | Max entries in the GitHub response cache |
+| `cartograph.github.cache-max-bytes` | `16777216` (16 MiB) | Max response-cache bytes |
 | `server.port` | `8080` | HTTP port |
 
-Set properties via `src/main/resources/application.yml`, command line (`--cartograph.sqlite.path=…`), or environment variables.
+Set properties via `src/main/resources/application.yml`, command line (`--cartograph.sqlite.path=…`), or environment variables (relaxed binding: `CARTOGRAPH_GITHUB_MAX_FILES=5000`).
 
 For Maven, pass application arguments as follows:
 
