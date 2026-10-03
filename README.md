@@ -166,7 +166,18 @@ Deliberate decision, full reasoning in [ADR 0001](docs/decisions/0001-sqlite-ove
 - **The planned store evolution is a graph DB** (`F2.07 Neo4j migration` at Gate C+), not Postgres — an unplanned SQLite → Postgres → Neo4j sequence is two migrations for no current benefit.
 - **The swap stays cheap when it's justified.** Persistence sits behind the `GraphSnapshotRepository` port: Postgres is one new adapter plus Flyway migrations (native in flyway-core), zero core changes.
 
-**Revisit triggers** (any one flips this decision): multiple API instances or async indexing jobs (F0.12) needing shared state · server-side graph/recursive path queries for the trace engine (Wave 9+) · pgvector for the "Ask" feature (F0.43) · managed HA/backup requirements. Until then: SQLite, on purpose.
+**Revisit triggers** (any one flips this decision): multiple API instances or async indexing jobs (F0.12) needing shared state · server-side graph/recursive path queries for the trace engine (Wave 9+) · pgvector for the "Ask" feature (F0.43) · managed HA/backup requirements.
+
+**When exactly do we shift?** Mapped to the plan's waves:
+
+| The moment | Expected wave | Why it forces the move |
+|---|---|---|
+| Async indexing jobs (F0.12) run in a separate worker process, **or** the deploy pipeline (F0.04) scales the API past one Fly.io instance | W4–W8 | Two processes cannot share one SQLite file — shared state requires a server DB. **This is the most likely shift point.** |
+| Ask/chat needs embeddings (F0.43) | W7 | Vector search is pgvector territory; SQLite has no good answer. |
+| Trace engine needs server-side recursive path queries (F1.01–F1.05) | W9–W10 | Doable in SQLite CTEs at small scale, but this is where Postgres (or the planned Neo4j move at Gate C) earns its keep. |
+| Self-hosters/customers demand managed HA + backups | Gate C+ anytime | Operational threshold, not a technical one. |
+
+Until one of those moments arrives, every wave in the plan — including async jobs at W4 — is buildable on SQLite; the port boundary means the swap is one adapter plus migrations, not a rewrite.
 
 ### Request lifecycle
 
