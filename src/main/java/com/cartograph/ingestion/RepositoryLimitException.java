@@ -1,5 +1,6 @@
 package com.cartograph.ingestion;
 
+/** Reports which configured repository size limit prevented indexing. */
 public final class RepositoryLimitException extends RuntimeException {
     private final IndexingLimits.Limit limit;
     private final long observedValue;

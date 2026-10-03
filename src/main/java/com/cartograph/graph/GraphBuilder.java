@@ -4,11 +4,21 @@ import com.cartograph.application.SourceParser;
 import com.cartograph.graph.model.*;
 import java.util.*;
 
+/** Combines parsed repository files into a deterministic graph snapshot. */
 public final class GraphBuilder {
     // Parsers intentionally use empty repository/commit context; this is the sole owner of final snapshot IDs.
     private final SourceParser parser;
+    /**
+     * @param parser parser used for each source file in the repository snapshot
+     */
     public GraphBuilder(SourceParser parser) { this.parser = Objects.requireNonNull(parser); }
 
+    /**
+     * Parses the files and assigns snapshot-scoped stable IDs to graph nodes.
+     *
+     * @param repository repository snapshot already fetched at a resolved commit
+     * @return graph snapshot with sorted nodes, edges, and warnings
+     */
     public GraphSnapshot build(RepositorySnapshot repository) {
         List<ParsedFile> parsed = repository.files().stream().sorted(Comparator.comparing(SourceFile::path))
                 .map(parser::parse).toList();

@@ -18,6 +18,12 @@ public final class IndexRepositoryService {
     private final GraphSnapshotRepository snapshots;
     private final GraphBuilder graphBuilder;
 
+    /**
+     * @param normalizer validates and converts repository URLs into references
+     * @param fetcher resolves commits and obtains repository snapshots
+     * @param snapshots stores and retrieves completed graph snapshots
+     * @param graphBuilder builds a graph from a fetched repository snapshot
+     */
     public IndexRepositoryService(GitHubUrlNormalizer normalizer, RepositoryFetcher fetcher,
             GraphSnapshotRepository snapshots, GraphBuilder graphBuilder) {
         this.normalizer = Objects.requireNonNull(normalizer);
@@ -26,10 +32,22 @@ public final class IndexRepositoryService {
         this.graphBuilder = Objects.requireNonNull(graphBuilder);
     }
 
+    /**
+     * Indexes a repository URL, reusing a cached graph for the resolved commit when available.
+     *
+     * @param repositoryUrl public repository URL to index
+     * @return cached or newly built graph snapshot
+     */
     public GraphSnapshot index(String repositoryUrl) {
         return index(normalizer.normalize(repositoryUrl));
     }
 
+    /**
+     * Indexes a normalized repository reference at its currently resolved commit.
+     *
+     * @param ref normalized owner, repository, and requested ref
+     * @return cached or newly built graph snapshot
+     */
     public GraphSnapshot index(RepositoryRef ref) {
         Objects.requireNonNull(ref, "repository reference");
         String commit = fetcher.resolveCommit(ref);

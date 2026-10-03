@@ -1,5 +1,6 @@
 package com.cartograph.graph.model;
 
+/** Counts graph elements, diagnostics, and files processed for an index operation. */
 public record GraphMetrics(int nodeCount, int edgeCount, int warningCount, int filesSeen, int filesParsed) {
     public GraphMetrics(int nodeCount, int edgeCount, int warningCount, int fileCount) {
         this(nodeCount, edgeCount, warningCount, fileCount, fileCount);

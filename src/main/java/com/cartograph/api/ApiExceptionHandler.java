@@ -16,6 +16,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.UUID;
 
+/** Maps request, upstream, and unexpected failures to the API's stable error response. */
 @RestControllerAdvice
 public final class ApiExceptionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ApiExceptionHandler.class);

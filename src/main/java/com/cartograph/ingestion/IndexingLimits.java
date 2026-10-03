@@ -3,6 +3,7 @@ package com.cartograph.ingestion;
 import java.util.List;
 import java.util.Objects;
 
+/** Immutable file-count and byte limits enforced while downloading a repository. */
 public record IndexingLimits(long maxFileCount, long maxTotalBytes, long maxFileBytes) {
     public IndexingLimits {
         if (maxFileCount <= 0 || maxTotalBytes <= 0 || maxFileBytes <= 0) {

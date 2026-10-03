@@ -1,5 +1,6 @@
 package com.cartograph.graph.model;
 
+/** A named source symbol with stable identity, 1-based lines, 0-based columns, and an exclusive end position. */
 public record GraphNode(String stableId, SymbolKind kind, String name, String filePath, int startLine, int endLine,
         int startColumn, int endColumn) {
     public GraphNode(String stableId, SymbolKind kind, String name, String filePath, int startLine, int endLine) {

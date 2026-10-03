@@ -2,6 +2,7 @@ package com.cartograph.graph.model;
 
 import java.util.List;
 
+/** Parser output for one source file, including symbols, relations, exports, and diagnostics. */
 public record ParsedFile(String path, List<GraphNode> nodes, List<GraphEdge> edges,
         List<GraphWarning> warnings, List<String> exports, List<GraphExport> exportDetails,
         List<DirectCallSite> directCallSites) {

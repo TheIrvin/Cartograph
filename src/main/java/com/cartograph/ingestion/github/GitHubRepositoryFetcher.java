@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/** Fetches repository metadata and source files through the GitHub REST client. */
 public class GitHubRepositoryFetcher implements RepositoryFetcher {
     private final GitHubClient client;
     private final IndexingLimits limits;
