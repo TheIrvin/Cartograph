@@ -38,6 +38,22 @@ without a trigger from the list below.
 3. **Ops threshold.** Managed HA/backup requirements, or outgrowing a single Fly.io
    volume.
 
+## When exactly do we shift?
+
+Mapped to the plan's waves so the moment is unambiguous:
+
+| The moment | Expected wave | Why it forces the move |
+|---|---|---|
+| Async indexing jobs (F0.12) run in a separate worker process, **or** the deploy pipeline (F0.04) scales the API past one Fly.io instance | W4–W8 | Two processes cannot share one SQLite file — shared state requires a server DB. **Most likely shift point.** |
+| Ask/chat needs embeddings (F0.43) | W7 | Vector search is pgvector territory; SQLite has no good answer. |
+| Trace engine needs server-side recursive path queries (F1.01–F1.05) | W9–W10 | Doable in SQLite CTEs at small scale; this is where Postgres (or the planned Neo4j move at Gate C) earns its keep. |
+| Self-hosters/customers demand managed HA + backups | Gate C+ anytime | Operational threshold, not a technical one. |
+
+Every wave before those moments — including async jobs at W4 with an in-process
+queue and a single instance — is buildable on SQLite. If F0.12 lands with jobs
+in-process and deployment stays single-instance, the shift moves later than W4;
+the deciding fact is always *concurrent processes sharing state*, not the calendar.
+
 ## Consequences
 
 - Fly.io deployment needs a persistent volume for the SQLite file while this decision holds.
