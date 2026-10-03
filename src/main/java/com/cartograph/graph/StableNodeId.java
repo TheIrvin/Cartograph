@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/** Creates deterministic node identifiers from repository and source identity. */
 public final class StableNodeId {
     private StableNodeId() { }
 

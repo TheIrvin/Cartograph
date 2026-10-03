@@ -2,6 +2,7 @@ package com.cartograph.graph.model;
 
 import java.util.List;
 
+/** Complete immutable graph and diagnostics for one repository commit. */
 public record GraphSnapshot(
         String repository,
         String commitSha,

@@ -24,6 +24,7 @@ import com.cartograph.ingestion.github.GitHubRepositoryFetcher;
 import com.cartograph.parsing.javascript.JavaScriptTypeScriptParser;
 import com.cartograph.persistence.sqlite.SQLiteGraphSnapshotRepository;
 
+/** Spring Boot entry point and wiring for the Cartograph adapters and application ports. */
 @SpringBootApplication
 @org.springframework.boot.context.properties.ConfigurationPropertiesScan
 public class CartographApplication {
@@ -55,6 +56,11 @@ public class CartographApplication {
         return properties.initializeDataSourceBuilder().build();
     }
 
+    /**
+     * Launches the Spring Boot service.
+     *
+     * @param args command-line arguments passed to Spring Boot
+     */
     public static void main(String[] args) {
         SpringApplication.run(CartographApplication.class, args);
     }
