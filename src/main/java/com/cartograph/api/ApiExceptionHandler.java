@@ -50,7 +50,8 @@ public final class ApiExceptionHandler {
                         "Too many indexing requests. Retry after the indicated delay."));
     }
 
-    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
+    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class,
+            ResourceNotFoundException.class})
     ResponseEntity<ApiErrorResponse> notFound(Exception ignored) {
         return response(HttpStatus.NOT_FOUND, "NOT_FOUND", "The requested resource was not found.");
     }

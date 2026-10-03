@@ -18,5 +18,11 @@ import com.cartograph.graph.model.GraphSnapshot;
 public interface GraphSnapshotRepository {
     Optional<GraphSnapshot> find(String repository, String commitSha);
 
+    /**
+     * Returns the most recently stored snapshot for {@code repository},
+     * regardless of commit; empty when the repository was never indexed.
+     */
+    Optional<GraphSnapshot> findLatest(String repository);
+
     void save(GraphSnapshot snapshot);
 }

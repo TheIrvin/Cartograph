@@ -122,6 +122,10 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081 --cartograph
 
 Liveness probe — returns `{"status":"UP"}` while the service is running.
 
+### `GET /api/v1/repositories/{owner}/{repo}`
+
+Returns the most recently stored snapshot for a repository **without touching GitHub** — pure local lookup. `404 NOT_FOUND` with the stable error body when the repository was never indexed.
+
 ### `POST /api/v1/index`
 
 Indexes (or returns the cached snapshot for) a public GitHub repository.
