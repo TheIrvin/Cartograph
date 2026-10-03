@@ -62,5 +62,6 @@ public record IndexingLimits(long maxFileCount, long maxTotalBytes, long maxFile
         validateFetchedTree(fileSizes);
     }
 
+    /** Identifies the file-count, cumulative-byte, or single-file-byte limit that was exceeded. */
     public enum Limit { FILE_COUNT, TOTAL_BYTES, FILE_BYTES }
 }

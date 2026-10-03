@@ -1,8 +1,8 @@
 /**
  * REST adapter for Cartograph: {@code IndexController} exposes the indexing
  * use case, request/response records carry the wire shape, and
- * {@code ApiExceptionHandler} maps every failure to the stable
- * {@code {code, message}} contract.
+ * {@code ApiExceptionHandler} returns a stable {@code {code, message}} response
+ * for handled request, upstream, and unexpected exceptions.
  *
  * <p>Boundary rules: no business logic here — this package delegates to the
  * {@code com.cartograph.application} use case and must not import GitHub

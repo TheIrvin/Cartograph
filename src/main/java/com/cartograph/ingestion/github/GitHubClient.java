@@ -29,6 +29,7 @@ public class GitHubClient {
     // Freeze credential scope: configuration changes cannot reuse another identity's cache.
     private final String token;
 
+    /** Delay hook used between retry attempts; implementations may be interrupted. */
     @FunctionalInterface
     public interface Sleeper {
         void sleep(long millis) throws InterruptedException;
@@ -254,17 +255,47 @@ public class GitHubClient {
         return java.net.URLEncoder.encode(value, StandardCharsets.UTF_8).replace("+", "%20").replace("%2F", "/");
     }
 
+    /**
+     * Body and ETag returned by a GitHub REST request.
+     *
+     * @param <T> response body type
+     * @param body decoded response body
+     * @param etag entity tag that can be reused for a conditional request
+     */
     public record Response<T>(T body, String etag) { }
+
+    /** Repository metadata returned by GitHub, including its default branch name. */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record RepositoryDto(String default_branch) { }
+
+    /** Commit metadata returned by GitHub, including the resolved commit SHA. */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record CommitDto(String sha) { }
+
+    /** Recursive Git tree response, including GitHub's truncation flag and returned entries. */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record TreeDto(Boolean truncated, List<TreeEntry> tree) { }
+
+    /** Git tree item with a path, object type, optional size, and object SHA. */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record TreeEntry(String path, String type, Long size, String sha) { }
+
+    /**
+     * Base64-encoded GitHub file-content response.
+     *
+     * @param type GitHub content type, expected to be {@code file}
+     * @param encoding GitHub content encoding, expected to be {@code base64}
+     * @param content base64 content, optionally wrapped in newline characters
+     * @param size reported decoded byte count
+     */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record ContentDto(String type, String encoding, String content, Long size) {
+        /**
+         * Validates the metadata, Base64 encoding, reported byte count, and UTF-8 content.
+         *
+         * @return decoded file bytes
+         * @throws GitHubFetchException if the response metadata or content is invalid
+         */
         public byte[] decodedBytes() {
             if (!"file".equals(type) || !"base64".equals(encoding) || content == null || size == null || size < 0) {
                 throw new GitHubFetchException(GitHubFetchException.Kind.UPSTREAM, 200, "Invalid GitHub content metadata");
@@ -287,6 +318,12 @@ public class GitHubClient {
             }
         }
 
+        /**
+         * Returns the validated content as UTF-8 text.
+         *
+         * @return decoded file content
+         * @throws GitHubFetchException if the response metadata or content is invalid
+         */
         public String decoded() {
             return new String(decodedBytes(), StandardCharsets.UTF_8);
         }

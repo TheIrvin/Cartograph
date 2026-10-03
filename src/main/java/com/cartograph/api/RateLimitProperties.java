@@ -2,7 +2,10 @@ package com.cartograph.api;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/** Rate-limit tuning for the indexing endpoint. Boundaries are per client IP. */
+/**
+ * Rate-limit tuning for the indexing endpoint. The client key uses the first
+ * {@code X-Forwarded-For} entry when present, otherwise the request's remote address.
+ */
 @ConfigurationProperties(prefix = "cartograph.ratelimit")
 public class RateLimitProperties {
     private boolean enabled = true;

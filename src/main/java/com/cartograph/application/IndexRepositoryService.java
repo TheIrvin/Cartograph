@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 import java.util.Optional;
 
-/** Cache-first application orchestration for repository indexing. */
+/** Application orchestration that reuses completed graph snapshots for resolved commits. */
 @Service
 public final class IndexRepositoryService {
     private final GitHubUrlNormalizer normalizer;
