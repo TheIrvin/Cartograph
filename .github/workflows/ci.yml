@@ -22,3 +22,11 @@ jobs:
 
       - name: Run tests
         run: mvn -B --no-transfer-progress test
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
+          retention-days: 14
