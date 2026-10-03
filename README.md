@@ -82,6 +82,32 @@ mvn spring-boot:run
 </details>
 
 <details>
+<summary><b>Linux / WSL / Windows via SDKMAN</b> (click to expand)</summary>
+
+```bash
+# Linux, WSL, or macOS with SDKMAN (https://sdkman.io)
+sdk install java 17.0.13-tem
+sdk install maven
+mvn spring-boot:run
+```
+</details>
+
+<details>
+<summary><b>Windows (PowerShell)</b> (click to expand)</summary>
+
+Install [Eclipse Temurin 17](https://adoptium.net/temurin/releases/?version=17)
+and Maven, then:
+
+```powershell
+$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-17"
+$env:Path = "$env:JAVA_HOME\bin;$env:Path"
+mvn spring-boot:run
+```
+</details>
+
+Only a JDK 17 and Maven are required — SQLite is embedded, nothing else to install.
+
+<details>
 <summary><b>Configuration</b> (all optional)</summary>
 
 | Key | Default | What it does |
@@ -134,7 +160,7 @@ Indexes (or returns the cached snapshot for) a public GitHub repository.
 { "repositoryUrl": "https://github.com/<owner>/<repo>" }
 ```
 
-Every error uses a stable `{ "code": "...", "message": "..." }` body:
+Every error uses a stable `{ "code": "...", "message": "..." }` body (full catalog with client guidance: [docs/errors.md](docs/errors.md)):
 
 | HTTP | Code | Meaning |
 |---|---|---|
